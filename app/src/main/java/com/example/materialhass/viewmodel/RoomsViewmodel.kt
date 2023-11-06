@@ -27,7 +27,7 @@ class RoomsViewmodel: ViewModel() {
         return withContext(Dispatchers.Main) {
                 var roomList: MutableList<Room> = mutableListOf()
                 roomList.add(Room(0, "Кухня", "https://proreiling.ru/wp-content/uploads/5/9/d/59d46a21ac5629beea300f92ad418b98.png", Icons.Default.Bento))
-                roomList.add(Room(1, "Спальня", "https://mydizajn.ru/wp-content/uploads/2016/11/Modern-Bedroom-3-1.jpg", Icons.Default.Bed))
+                roomList.add(Room(1, "Спальня", "https://mydizajn.ru/wp-content/uploads/2016/11/Modern-Bedroom-3-1.jpg", Icons.Default.Bed)) //TODO: Затычка
                 return@withContext roomList
         }
     }

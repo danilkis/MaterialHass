@@ -1,5 +1,6 @@
 package com.example.materialhass.screens
 
+import android.bluetooth.BluetoothClass.Device
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,28 +15,30 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.materialhass.customcomponents.RoomCard
+import com.example.materialhass.models.Devices
 import com.example.materialhass.models.Room
+import com.example.materialhass.viewmodel.RoomDevicesViewmodel
 import com.example.materialhass.viewmodel.RoomsViewmodel
 
 @Composable
-fun RoomScreen(navController: NavController, viewmodel: RoomsViewmodel = viewModel())
+fun RoomDeviceScreen(navController: NavController, viewmodel: RoomDevicesViewmodel = viewModel())
 {
-    val rooms by viewmodel.Rooms.collectAsState(initial = mutableListOf() )
-    if (!rooms.isEmpty())
+    val devices by viewmodel.Devices.collectAsState(initial = mutableListOf() )
+    if (!devices.isEmpty())
     {
-        RoomsList(rooms = rooms, navController)
+        //RoomsList(rooms = rooms, navController)
     }
 }
 @Composable
-fun RoomsList(rooms: MutableList<Room>, navController: NavController)
+fun DevicesList(rooms: MutableList<Devices>, navController: NavController)
 {
     LazyColumn(modifier = Modifier
         .fillMaxWidth()
         .padding(10.dp))
     {
         items(rooms){ room ->
-            RoomCard(room, room.id.toString(), navController = navController)
-            Spacer(modifier = Modifier.height(14.dp))
+            //RoomCard(room, room.id.toString(), navController = navController)
+            //Spacer(modifier = Modifier.height(14.dp))
         }
     }
 }
