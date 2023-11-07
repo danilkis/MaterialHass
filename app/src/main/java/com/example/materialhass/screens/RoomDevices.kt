@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HeatPump
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -35,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.materialhass.customcomponents.ClimateCard
+import com.example.materialhass.customcomponents.CoverCard
 import com.example.materialhass.customcomponents.LightCard
 import com.example.materialhass.customcomponents.RoomCircle
 import com.example.materialhass.models.Devices
@@ -85,6 +88,7 @@ fun TypeDivider(type: String, icon: ImageVector)
 fun RoomDevicesScreen(room: Room, navController: NavController, viewModel: RoomDevicesViewmodel = androidx.lifecycle.viewmodel.compose.viewModel())
 {
     val devices_list by viewModel.Devices.collectAsState(initial =  mutableListOf() )
+    val rememberScrollState = rememberScrollState()
     Column(modifier = Modifier.fillMaxSize())
     {
         RoomHeader(room)
@@ -114,6 +118,10 @@ fun DevicePage(devices: MutableList<Devices>, type_filter: String)
             if (type_filter == "climate")
             {
                 ClimateCard(device)
+            }
+            if (type_filter == "cover")
+            {
+                CoverCard(device)
             }
         }
     }

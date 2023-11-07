@@ -28,7 +28,7 @@ class RoomDevicesViewmodel: ViewModel() {
         return withContext(Dispatchers.Main) {
             var deviceList: MutableList<Devices> = mutableListOf()
             deviceList.add(Devices(0, "light.lamp", "Лампа", "light")) //TODO: Затычка
-            deviceList.add(Devices(1, "light.leds", "Светодиодная лента", "light"))
+            deviceList.add(Devices(1, "light.leds", "Лента", "light"))
             deviceList.add(Devices(2, "cover.shades", "Жалюзи", "cover"))
             deviceList.add(Devices(3, "climate.floor", "Теплый пол", "climate"))
             return@withContext deviceList
