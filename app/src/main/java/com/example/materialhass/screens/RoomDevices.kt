@@ -1,8 +1,12 @@
 package com.example.materialhass.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowColumn
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,9 +15,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -84,6 +90,7 @@ fun TypeDivider(type: String, icon: ImageVector)
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RoomDevicesScreen(room: Room, navController: NavController, viewModel: RoomDevicesViewmodel = androidx.lifecycle.viewmodel.compose.viewModel())
 {
@@ -93,36 +100,51 @@ fun RoomDevicesScreen(room: Room, navController: NavController, viewModel: RoomD
     {
         RoomHeader(room)
         Divider()
-        TypeDivider(type = "Свет", icon = Icons.Default.LightbulbCircle)
-        DevicePage(devices_list, "light")
-        TypeDivider(type = "Климат", icon = Icons.Default.HeatPump)
-        DevicePage(devices_list, "climate")
-        TypeDivider(type = "Жалюзи", icon = Icons.Default.RollerShades)
-        DevicePage(devices_list, "cover")
+        DevicePage(devices_list)
     }
 }
 
 @Composable
-fun DevicePage(devices: MutableList<Devices>, type_filter: String)
+fun DevicePage(devices: MutableList<Devices>)
 {
-    val result_list = devices.filter { it.type == type_filter }
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2), modifier = Modifier.padding(4.dp), verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(result_list) { device ->
-            if(type_filter == "light")
-            {
-                LightCard(device)
+    val groupedDevices = devices.groupBy { it.type }
+
+    LazyColumn {
+        groupedDevices.forEach { (type, device) ->
+            item {
+                // This is your divider
+                if(type == "light")
+                {
+                    TypeDivider(type = "Свет", icon = Icons.Default.LightbulbCircle)
+                }
+                if(type == "cover")
+                {
+                    TypeDivider(type = "Жалюзи", icon = Icons.Default.RollerShades)
+                }
+                if(type == "climate")
+                {
+                    TypeDivider(type = "Климат", icon = Icons.Default.HeatPump)
+                }
             }
-            if (type_filter == "climate")
-            {
-                ClimateCard(device)
-            }
-            if (type_filter == "cover")
-            {
-                CoverCard(device)
+
+            items(device) { rowDevices ->
+                Log.e("Maket", "${rowDevices.toString()}")
+                Row(horizontalArrangement = Arrangement.SpaceAround) {
+                    if(rowDevices.type == "light")
+                    {
+                        LightCard(rowDevices)
+
+                    }
+                    if(rowDevices.type == "cover")
+                    {
+                        CoverCard(rowDevices)
+                        //if(rowDevices.size > 1) { CoverCard(rowDevices[1]) }
+                    }
+                    if(rowDevices.type == "climate")
+                    {
+                        ClimateCard(rowDevices)
+                    }
+                }
             }
         }
-    }
-}
+    }}
