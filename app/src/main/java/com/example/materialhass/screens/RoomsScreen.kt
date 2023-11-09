@@ -18,22 +18,22 @@ import com.example.materialhass.models.Room
 import com.example.materialhass.viewmodel.RoomsViewmodel
 
 @Composable
-fun RoomScreen(navController: NavController, viewmodel: RoomsViewmodel = viewModel())
-{
-    val rooms by viewmodel.Rooms.collectAsState(initial = mutableListOf() )
-    if (!rooms.isEmpty())
-    {
+fun RoomScreen(navController: NavController, viewmodel: RoomsViewmodel = viewModel()) {
+    val rooms by viewmodel.Rooms.collectAsState(initial = mutableListOf())
+    if (!rooms.isEmpty()) {
         RoomsList(rooms = rooms, navController)
     }
 }
+
 @Composable
-fun RoomsList(rooms: MutableList<Room>, navController: NavController)
-{
-    LazyColumn(modifier = Modifier
-        .fillMaxWidth()
-        .padding(10.dp))
+fun RoomsList(rooms: MutableList<Room>, navController: NavController) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+    )
     {
-        items(rooms){ room ->
+        items(rooms) { room ->
             RoomCard(room, room.id.toString(), navController = navController)
             Spacer(modifier = Modifier.height(14.dp))
         }

@@ -9,12 +9,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.materialhass.screens.MainScreen
-import com.example.materialhass.screens.RoomDeviceScreen
 import com.example.materialhass.screens.RoomDevicesScreen
 import com.example.materialhass.viewmodel.RoomsViewmodel
 import com.example.supabasedemo.screens.Auth
 import com.example.supabasedemo.screens.Hello
-import androidx.navigation.NavHost as NavHost1
 
 @Composable
 fun GeneralNavigation() {
@@ -40,7 +38,7 @@ fun GeneralNavigation() {
             arguments = listOf(navArgument("roomId") { type = NavType.IntType })
         ) {
             val roomId: Int = it.arguments?.getInt("roomId") ?: 0
-            rooms.forEach { it ->
+            rooms.forEach {
                 if (it.id == roomId) {
                     RoomDevicesScreen(it, navController)
                 }

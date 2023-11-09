@@ -1,6 +1,5 @@
 package com.example.materialhass.customcomponents
 
-import android.graphics.Paint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -30,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.example.materialhass.models.Devices
 
@@ -56,7 +54,11 @@ fun LightCard(device: Devices, modifier: Modifier) {
                 }
                 Spacer(modifier = Modifier.width(25.dp))
                 OutlinedIconButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Default.PowerSettingsNew, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                    Icon(
+                        Icons.Default.PowerSettingsNew,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 }
             }
             Column {
@@ -75,10 +77,10 @@ fun LightCard(device: Devices, modifier: Modifier) {
 @OptIn(ExperimentalLayoutApi::class)
 @Preview
 @Composable
-fun LightCardPreview()
-{
+fun LightCardPreview() {
     FlowRow(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(4.dp)
             .verticalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(4.dp),

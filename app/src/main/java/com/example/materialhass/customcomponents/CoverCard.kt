@@ -11,9 +11,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Blinds
 import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Light
-import androidx.compose.material.icons.filled.Minimize
-import androidx.compose.material.icons.filled.PlusOne
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.Icon
@@ -29,18 +26,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CoverCard(devices: com.example.materialhass.models.Devices)
-{
+fun CoverCard(devices: com.example.materialhass.models.Devices) {
     OutlinedCard(modifier = Modifier.fillMaxWidth()) {
-        Column (modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)) {
-            Row(horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
+            )
             {
                 Row(modifier = Modifier.weight(1f))
                 {
@@ -49,20 +48,38 @@ fun CoverCard(devices: com.example.materialhass.models.Devices)
                     Column() {
                         Text(devices.friendly_name, style = MaterialTheme.typography.bodyLarge)
                         Spacer(Modifier.height(4.dp))
-                        Text(devices.type, style = MaterialTheme.typography.bodyMedium) //TODO: состояние устройства
+                        Text(
+                            devices.type,
+                            style = MaterialTheme.typography.bodyMedium
+                        ) //TODO: состояние устройства
                     }
                 }
                 Spacer(modifier = Modifier.width(10.dp))
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                )
                 {
                     OutlinedIconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.Upload, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                        Icon(
+                            Icons.Default.Upload,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
                     }
                     OutlinedIconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.Stop, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                        Icon(
+                            Icons.Default.Stop,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
                     }
                     OutlinedIconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.Download, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                        Icon(
+                            Icons.Default.Download,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
                     }
                 }
             }

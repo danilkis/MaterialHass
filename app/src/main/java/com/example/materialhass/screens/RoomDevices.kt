@@ -1,15 +1,10 @@
 package com.example.materialhass.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowColumn
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,17 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HeatPump
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.LightbulbCircle
 import androidx.compose.material.icons.filled.RollerShades
 import androidx.compose.material3.Divider
@@ -39,11 +27,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
@@ -56,8 +41,7 @@ import com.example.materialhass.models.Room
 import com.example.materialhass.viewmodel.RoomDevicesViewmodel
 
 @Composable
-fun RoomHeader(room: Room)
-{
+fun RoomHeader(room: Room) {
     Column(modifier = Modifier.height(250.dp))
     {
         Image(
@@ -68,11 +52,15 @@ fun RoomHeader(room: Room)
                 .fillMaxWidth(),
             contentScale = ContentScale.Crop
         )
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        )
         {
-            RoomCircle(id = "0", icon = room.icon, size = 55.dp)
+            RoomCircle(icon = room.icon, size = 55.dp)
             Spacer(Modifier.width(10.dp))
             Column() {
                 Text(room.name, style = MaterialTheme.typography.headlineMedium)
@@ -82,12 +70,16 @@ fun RoomHeader(room: Room)
         }
     }
 }
+
 @Composable
-fun TypeDivider(type: String, icon: ImageVector)
-{
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(8.dp), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically)
+fun TypeDivider(type: String, icon: ImageVector) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    )
     {
         Text(type, style = MaterialTheme.typography.headlineLarge)
         Spacer(Modifier.width(8.dp))
@@ -97,10 +89,12 @@ fun TypeDivider(type: String, icon: ImageVector)
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun RoomDevicesScreen(room: Room, navController: NavController, viewModel: RoomDevicesViewmodel = androidx.lifecycle.viewmodel.compose.viewModel())
-{
-    val devices_list by viewModel.Devices.collectAsState(initial =  mutableListOf() )
-    val rememberScrollState = rememberScrollState()
+fun RoomDevicesScreen(
+    room: Room,
+    navController: NavController,
+    viewModel: RoomDevicesViewmodel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
+    val devices_list by viewModel.Devices.collectAsState(initial = mutableListOf())
     Column(modifier = Modifier.fillMaxSize())
     {
         RoomHeader(room)
@@ -111,50 +105,43 @@ fun RoomDevicesScreen(room: Room, navController: NavController, viewModel: RoomD
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DevicePage(devices: List<Devices>)
-{
+fun DevicePage(devices: List<Devices>) {
     val groupedDevices = devices.groupBy { it.type }
     FlowRow(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(4.dp)
             .verticalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         maxItemsInEachRow = 2
     ) {
         groupedDevices.forEach { (type, device) ->
-                // This is your divider
-                if(type == "light")
-                {
-                    TypeDivider(type = "Свет", icon = Icons.Default.LightbulbCircle)
-                }
-                if(type == "cover")
-                {
-                    TypeDivider(type = "Жалюзи", icon = Icons.Default.RollerShades)
-                }
-                if(type == "climate")
-                {
-                    TypeDivider(type = "Климат", icon = Icons.Default.HeatPump)
-                }
+            // This is your divider
+            if (type == "light") {
+                TypeDivider(type = "Свет", icon = Icons.Default.LightbulbCircle)
+            }
+            if (type == "cover") {
+                TypeDivider(type = "Жалюзи", icon = Icons.Default.RollerShades)
+            }
+            if (type == "climate") {
+                TypeDivider(type = "Климат", icon = Icons.Default.HeatPump)
+            }
             device.forEach { item ->
-                if(item.type == "light")
-                {
+                if (item.type == "light") {
                     LightCard(item, Modifier.weight(0.25f))
 
                 }
-                if(item.type == "cover")
-                {
+                if (item.type == "cover") {
                     CoverCard(item)
                     //if(rowDevices.size > 1) { CoverCard(rowDevices[1]) }
                 }
-                if(item.type == "climate")
-                {
+                if (item.type == "climate") {
                     ClimateCard(item)
                 }
-                }
             }
+        }
     }
 }
-
 
 
 /*

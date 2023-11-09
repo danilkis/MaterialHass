@@ -1,15 +1,13 @@
 package com.example.materialhass.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material.icons.rounded.Devices
-import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Room
 import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -29,6 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.materialhass.models.MainScreenDest
 import com.example.materialhass.screens.RoomScreen
+import com.example.materialhass.screens.SettingsScreen
 
 val destinations = listOf(
     MainScreenDest("Комнаты", Icons.Rounded.Room) {
@@ -38,10 +37,10 @@ val destinations = listOf(
         //ThingsMainScreen(it)
     },
     MainScreenDest("Настройки", Icons.Rounded.Settings) {
-        //OrdersMainScreen(it)
+        SettingsScreen(it)
     },
 )
-
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenNavigation(navControllerGeneral: NavHostController) { //
@@ -53,8 +52,7 @@ fun MainScreenNavigation(navControllerGeneral: NavHostController) { //
             val currentDestination = navBackStackEntry?.destination
 
             destinations.forEach { dest ->
-                NavigationBarItem(
-                    selected = currentDestination?.hierarchy?.any { it.route == dest.name } == true,
+                NavigationBarItem(selected = currentDestination?.hierarchy?.any { it.route == dest.name } == true,
                     onClick = {
                         navController.navigate(dest.name) {
                             // Pop up to the start destination of the graph to
@@ -72,8 +70,7 @@ fun MainScreenNavigation(navControllerGeneral: NavHostController) { //
                     },
                     icon = {
                         Icon(
-                            dest.icon,
-                            contentDescription = null
+                            dest.icon, contentDescription = null
                         )
                     },
                     label = { Text(text = dest.name) })
