@@ -34,36 +34,35 @@ import com.example.materialhass.models.Devices
 @Composable
 fun ClimateCard(device: Devices)
 {
-    OutlinedCard(modifier = Modifier.fillMaxWidth()) {
+    OutlinedCard() {
         Column (modifier = Modifier
-            .fillMaxWidth()
             .padding(8.dp)) {
             Row( horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically)
             {
                 DeviceCircle(id = "0", icon = Icons.Default.AcUnit)
                 Spacer(Modifier.width(10.dp))
-                Column {
+                Column () {
                     Text(device.friendly_name, style = MaterialTheme.typography.bodyLarge)
                     Spacer(Modifier.height(4.dp))
                     Text(device.type, style = MaterialTheme.typography.bodyMedium) //TODO: состояние устройства
                     Spacer(modifier = Modifier.height(4.dp))
                     Text("24C", style = MaterialTheme.typography.bodyMedium)
                 }
-            }
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp))
-            {
-                Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically)
+                Spacer(Modifier.width(10.dp))
+                Row(modifier = Modifier
+                    .padding(8.dp))
                 {
-                    OutlinedIconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.PlusOne, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
-                    }
-                    OutlinedIconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.Minimize, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
-                    }
-                    OutlinedIconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.PowerSettingsNew, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                    Row(horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f))
+                    {
+                        OutlinedIconButton(onClick = { /*TODO*/ }) {
+                            Icon(Icons.Default.PlusOne, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                        }
+                        OutlinedIconButton(onClick = { /*TODO*/ }) {
+                            Icon(Icons.Default.Minimize, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                        }
+                        OutlinedIconButton(onClick = { /*TODO*/ }) {
+                            Icon(Icons.Default.PowerSettingsNew, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                        }
                     }
                 }
             }

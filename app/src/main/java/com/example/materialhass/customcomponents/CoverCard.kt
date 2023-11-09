@@ -40,9 +40,9 @@ fun CoverCard(devices: com.example.materialhass.models.Devices)
         Column (modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)) {
-            Row( horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically)
+            Row(horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically)
             {
-                Row()
+                Row(modifier = Modifier.weight(1f))
                 {
                     DeviceCircle(id = "0", icon = Icons.Default.Blinds)
                     Spacer(Modifier.width(10.dp))
@@ -53,7 +53,7 @@ fun CoverCard(devices: com.example.materialhass.models.Devices)
                     }
                 }
                 Spacer(modifier = Modifier.width(10.dp))
-                Row(verticalAlignment = Alignment.CenterVertically)
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End)
                 {
                     OutlinedIconButton(onClick = { /*TODO*/ }) {
                         Icon(Icons.Default.Upload, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)

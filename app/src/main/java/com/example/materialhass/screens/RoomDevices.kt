@@ -90,7 +90,7 @@ fun TypeDivider(type: String, icon: ImageVector)
         .padding(8.dp), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically)
     {
         Text(type, style = MaterialTheme.typography.headlineLarge)
-        Spacer(Modifier.width(10.dp))
+        Spacer(Modifier.width(8.dp))
         Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
     }
 }
@@ -121,11 +121,6 @@ fun DevicePage(devices: List<Devices>)
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         maxItemsInEachRow = 2
     ) {
-        val itemModifier = Modifier
-            .padding(4.dp)
-            .height(80.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color.Blue)
         groupedDevices.forEach { (type, device) ->
                 // This is your divider
                 if(type == "light")
@@ -143,7 +138,7 @@ fun DevicePage(devices: List<Devices>)
             device.forEach { item ->
                 if(item.type == "light")
                 {
-                    LightCard(item, Modifier.weight(0.5f))
+                    LightCard(item, Modifier.weight(0.25f))
 
                 }
                 if(item.type == "cover")
