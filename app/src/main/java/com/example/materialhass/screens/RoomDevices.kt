@@ -3,10 +3,12 @@ package com.example.materialhass.screens
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowColumn
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +23,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HeatPump
@@ -36,6 +39,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
@@ -104,12 +109,66 @@ fun RoomDevicesScreen(room: Room, navController: NavController, viewModel: RoomD
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun DevicePage(devices: List<Devices>)
+{
+    val groupedDevices = devices.groupBy { it.type }
+    FlowRow(
+        modifier = Modifier.fillMaxWidth()
+            .padding(4.dp)
+            .verticalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        maxItemsInEachRow = 2
+    ) {
+        val itemModifier = Modifier
+            .padding(4.dp)
+            .height(80.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color.Blue)
+        groupedDevices.forEach { (type, device) ->
+                // This is your divider
+                if(type == "light")
+                {
+                    TypeDivider(type = "Свет", icon = Icons.Default.LightbulbCircle)
+                }
+                if(type == "cover")
+                {
+                    TypeDivider(type = "Жалюзи", icon = Icons.Default.RollerShades)
+                }
+                if(type == "climate")
+                {
+                    TypeDivider(type = "Климат", icon = Icons.Default.HeatPump)
+                }
+            device.forEach { item ->
+                if(item.type == "light")
+                {
+                    LightCard(item, Modifier.weight(0.5f))
+
+                }
+                if(item.type == "cover")
+                {
+                    CoverCard(item)
+                    //if(rowDevices.size > 1) { CoverCard(rowDevices[1]) }
+                }
+                if(item.type == "climate")
+                {
+                    ClimateCard(item)
+                }
+                }
+            }
+    }
+}
+
+
+
+/*
 @Composable
 fun DevicePage(devices: MutableList<Devices>)
 {
     val groupedDevices = devices.groupBy { it.type }
 
-    LazyColumn {
+    LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
         groupedDevices.forEach { (type, device) ->
             item {
                 // This is your divider
@@ -148,3 +207,4 @@ fun DevicePage(devices: MutableList<Devices>)
             }
         }
     }}
+ */
