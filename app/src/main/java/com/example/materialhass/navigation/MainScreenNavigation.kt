@@ -26,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.materialhass.models.MainScreenDest
+import com.example.materialhass.screens.DevicesScreen
 import com.example.materialhass.screens.RoomScreen
 import com.example.materialhass.screens.SettingsScreen
 
@@ -34,7 +35,7 @@ val destinations = listOf(
         RoomScreen(it)
     },
     MainScreenDest("Устройства", Icons.Rounded.Devices) {
-        //ThingsMainScreen(it)
+        DevicesScreen(it)
     },
     MainScreenDest("Настройки", Icons.Rounded.Settings) {
         SettingsScreen(it)

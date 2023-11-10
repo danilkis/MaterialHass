@@ -6,5 +6,6 @@ data class Devices(
     val id: Int,
     val name: String,
     val friendly_name: String,
-    val type: String
+    val type: String,
+    val icon: ImageVector
 )

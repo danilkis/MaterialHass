@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AcUnit
 import androidx.compose.material.icons.filled.Minimize
 import androidx.compose.material.icons.filled.PlusOne
 import androidx.compose.material.icons.filled.PowerSettingsNew
@@ -25,11 +24,11 @@ import androidx.compose.ui.unit.dp
 import com.example.materialhass.models.Devices
 
 @Composable
-fun ClimateCard(device: Devices) {
-    OutlinedCard() {
+fun ClimateCard(device: Devices, modifier: Modifier) {
+    OutlinedCard(modifier) {
         Column(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(12.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -37,7 +36,7 @@ fun ClimateCard(device: Devices) {
                 verticalAlignment = Alignment.CenterVertically
             )
             {
-                DeviceCircle(id = "0", icon = Icons.Default.AcUnit)
+                DeviceCircle(id = "0", icon = device.icon)
                 Spacer(Modifier.width(10.dp))
                 Column() {
                     Text(device.friendly_name, style = MaterialTheme.typography.bodyLarge)

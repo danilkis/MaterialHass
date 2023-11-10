@@ -36,6 +36,7 @@ import com.example.materialhass.customcomponents.ClimateCard
 import com.example.materialhass.customcomponents.CoverCard
 import com.example.materialhass.customcomponents.LightCard
 import com.example.materialhass.customcomponents.RoomCircle
+import com.example.materialhass.customcomponents.TypeDivider
 import com.example.materialhass.models.Devices
 import com.example.materialhass.models.Room
 import com.example.materialhass.viewmodel.RoomDevicesViewmodel
@@ -68,22 +69,6 @@ fun RoomHeader(room: Room) {
                 Text(room.id.toString(), style = MaterialTheme.typography.headlineSmall)
             }
         }
-    }
-}
-
-@Composable
-fun TypeDivider(type: String, icon: ImageVector) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
-    )
-    {
-        Text(type, style = MaterialTheme.typography.headlineLarge)
-        Spacer(Modifier.width(8.dp))
-        Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
     }
 }
 
@@ -132,61 +117,13 @@ fun DevicePage(devices: List<Devices>) {
 
                 }
                 if (item.type == "cover") {
-                    CoverCard(item)
+                    CoverCard(item, Modifier.weight(0.5f))
                     //if(rowDevices.size > 1) { CoverCard(rowDevices[1]) }
                 }
                 if (item.type == "climate") {
-                    ClimateCard(item)
+                    ClimateCard(item, Modifier.weight(0.5f).padding(4.dp))
                 }
             }
         }
     }
 }
-
-
-/*
-@Composable
-fun DevicePage(devices: MutableList<Devices>)
-{
-    val groupedDevices = devices.groupBy { it.type }
-
-    LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-        groupedDevices.forEach { (type, device) ->
-            item {
-                // This is your divider
-                if(type == "light")
-                {
-                    TypeDivider(type = "Свет", icon = Icons.Default.LightbulbCircle)
-                }
-                if(type == "cover")
-                {
-                    TypeDivider(type = "Жалюзи", icon = Icons.Default.RollerShades)
-                }
-                if(type == "climate")
-                {
-                    TypeDivider(type = "Климат", icon = Icons.Default.HeatPump)
-                }
-            }
-
-            items(device) { rowDevices ->
-                Log.e("Maket", "${rowDevices.toString()}")
-                Row(horizontalArrangement = Arrangement.SpaceAround) {
-                    if(rowDevices.type == "light")
-                    {
-                        LightCard(rowDevices)
-
-                    }
-                    if(rowDevices.type == "cover")
-                    {
-                        CoverCard(rowDevices)
-                        //if(rowDevices.size > 1) { CoverCard(rowDevices[1]) }
-                    }
-                    if(rowDevices.type == "climate")
-                    {
-                        ClimateCard(rowDevices)
-                    }
-                }
-            }
-        }
-    }}
- */
