@@ -34,6 +34,7 @@ fun DevicesScreen(
     FlowRow(
         modifier = Modifier
             .fillMaxSize()
+            .padding(start = 0.dp, top = 4.dp, end = 0.dp, bottom = 75.dp)
             .verticalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalArrangement = Arrangement.SpaceBetween,
