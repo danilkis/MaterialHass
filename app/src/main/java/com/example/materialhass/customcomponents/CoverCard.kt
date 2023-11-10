@@ -1,5 +1,6 @@
 package com.example.materialhass.customcomponents
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,15 +17,25 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun CoverCard(devices: com.example.materialhass.models.Devices, modifier: Modifier) {
-    OutlinedCard(modifier) {
+    var size by remember { mutableStateOf(IntSize.Zero) }
+    Log.d("Test", "${devices.friendly_name} - $size")
+
+    OutlinedCard(modifier.onSizeChanged { size = it }) {
         Column(
             modifier = Modifier
                 .padding(12.dp)
@@ -47,37 +58,81 @@ fun CoverCard(devices: com.example.materialhass.models.Devices, modifier: Modifi
                             style = MaterialTheme.typography.bodyMedium
                         ) //TODO: состояние устройства
                     }
+
+                    if (size.width > 700){
+                        ManagementOutlinedIconButtons(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.End
+                        )
+                    }
+
                 }
             }
+
             Spacer(modifier = Modifier.height(10.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
-            )
-            {
-                OutlinedIconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        Icons.Default.Upload,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-                OutlinedIconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        Icons.Default.Stop,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-                OutlinedIconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        Icons.Default.Download,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+
+            if (size.width < 700){
+                ManagementOutlinedIconButtons(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                )
+            }else{
+                Column {
+                    var sliderPosition by remember { mutableStateOf(0f) }
+                    Slider(
+
+                        value = sliderPosition,
+                        valueRange = 0f..10f,
+                        onValueChange = { sliderPosition = it },
                     )
                 }
             }
+
+
+        }
+    }
+
+}
+
+
+
+@Composable
+fun ManagementOutlinedIconButtons(
+    modifier: Modifier,
+    verticalAlignment: Alignment.Vertical,
+    horizontalArrangement: Arrangement.Horizontal
+){
+    Row(
+        modifier = modifier,
+        verticalAlignment = verticalAlignment,
+        horizontalArrangement = horizontalArrangement
+    )
+    {
+        OutlinedIconButton(onClick = { /*TODO*/ }) {
+            Icon(
+                Icons.Default.Upload,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
+        OutlinedIconButton(onClick = { /*TODO*/ }) {
+            Icon(
+                Icons.Default.Stop,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
+        OutlinedIconButton(onClick = { /*TODO*/ }) {
+            Icon(
+                Icons.Default.Download,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
+            )
         }
     }
 }
+
+
 
