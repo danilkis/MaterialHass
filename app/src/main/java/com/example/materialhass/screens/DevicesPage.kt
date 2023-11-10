@@ -1,7 +1,6 @@
 package com.example.materialhass.screens
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,7 +34,6 @@ fun DevicesScreen(
     FlowRow(
         modifier = Modifier
             .fillMaxSize()
-            .padding(4.dp)
             .verticalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalArrangement = Arrangement.SpaceBetween,
@@ -50,16 +48,18 @@ fun DevicesScreen(
             }
             device.forEach { item ->
                 when (item.type) {
-                    "light" -> Box(Modifier.weight(0.5f)) {
-                        LightCard(
-                            item,
-                            Modifier.padding(4.dp)
-                        )
-                    } //
-                    "cover" -> CoverCard(item,
+                    "light" -> LightCard(
+                        item,
                         Modifier
+                            .padding(4.dp)
                             .weight(0.5f)
-                            .padding(4.dp))
+                    )
+                    "cover" -> CoverCard(
+                        item,
+                        Modifier
+                            .padding(4.dp)
+                            .weight(0.5f)
+                    )
                     "climate" -> ClimateCard(item, Modifier.padding(4.dp))
                 }
             }
