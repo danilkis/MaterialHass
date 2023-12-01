@@ -90,9 +90,3 @@ fun ClimateCard(device: Devices, modifier: Modifier) {
     }
 }
 
-@Preview
-@Composable
-fun card_preview()
-{
-    ClimateCard(Devices(0, "climate.ac","Кондиционер", "climate", Icons.Default.AcUnit), Modifier.fillMaxWidth())
-}

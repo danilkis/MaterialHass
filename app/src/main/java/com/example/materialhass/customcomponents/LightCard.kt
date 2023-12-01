@@ -21,16 +21,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.materialhass.API.HomeAssistantAPI
+import com.example.materialhass.API.ToggleBody
 import com.example.materialhass.models.Devices
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun LightCard(device: Devices, modifier: Modifier) {
+    val corutineScope = rememberCoroutineScope()
     OutlinedCard(modifier) {
         Column(
             modifier = Modifier.padding(12.dp)
@@ -51,13 +58,26 @@ fun LightCard(device: Devices, modifier: Modifier) {
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        device.type,
+                        device.state,
                         style = MaterialTheme.typography.bodyMedium,
                         softWrap = false,
                         modifier = Modifier.fillMaxWidth()
-                    ) //TODO: состояние устройства
+                    )
                 }
-                OutlinedIconButton(onClick = { /*TODO*/ }) {
+                OutlinedIconButton(onClick =
+                {
+                    corutineScope.launch {
+                        val retrofit = Retrofit.Builder()
+                            .baseUrl("https://pavlovskhome.ru/")
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build()
+
+                        // Create the API instance
+                        val api = retrofit.create(HomeAssistantAPI::class.java)
+                        val body = ToggleBody(entity_id = device.name) // replace "light.Ceiling" with your actual entity_id
+                        api.toggleLight(body)
+                    }
+                }, enabled = device.state != "unavailable") {
                     Icon(
                         Icons.Default.PowerSettingsNew,
                         contentDescription = null,
@@ -65,13 +85,15 @@ fun LightCard(device: Devices, modifier: Modifier) {
                     )
                 }
             }
-            Column {
-                var sliderPosition by remember { mutableStateOf(0f) }
-                Slider(
-                    value = sliderPosition,
-                    valueRange = 0f..10f,
-                    onValueChange = { sliderPosition = it },
-                )
+            if (device.extended_controls) {
+                Column {
+                    var sliderPosition by remember { mutableStateOf(0f) }
+                    Slider(
+                        value = sliderPosition,
+                        valueRange = 0f..10f,
+                        onValueChange = { sliderPosition = it },
+                    )
+                }
             }
         }
     }
