@@ -9,5 +9,6 @@ data class Devices(
     val type: String,
     val state: String,
     val icon: ImageVector,
-    val extended_controls: Boolean
+    val extended_controls: Boolean,
+    val brightness: Double?
 )

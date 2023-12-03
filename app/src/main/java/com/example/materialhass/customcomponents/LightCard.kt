@@ -27,16 +27,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.materialhass.API.HomeAssistantAPI
-import com.example.materialhass.API.ToggleBody
 import com.example.materialhass.models.Devices
+import com.example.materialhass.viewmodel.DevicesViewmodel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun LightCard(device: Devices, modifier: Modifier) {
+fun LightCard(device: Devices, modifier: Modifier, viewmodel: DevicesViewmodel) {
     val corutineScope = rememberCoroutineScope()
     OutlinedCard(modifier) {
         Column(
@@ -67,15 +65,7 @@ fun LightCard(device: Devices, modifier: Modifier) {
                 OutlinedIconButton(onClick =
                 {
                     corutineScope.launch {
-                        val retrofit = Retrofit.Builder()
-                            .baseUrl("https://pavlovskhome.ru/")
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .build()
-
-                        // Create the API instance
-                        val api = retrofit.create(HomeAssistantAPI::class.java)
-                        val body = ToggleBody(entity_id = device.name) // replace "light.Ceiling" with your actual entity_id
-                        api.toggleLight(body)
+                        viewmodel.toggleDevice(device)
                     }
                 }, enabled = device.state != "unavailable") {
                     Icon(
@@ -88,10 +78,17 @@ fun LightCard(device: Devices, modifier: Modifier) {
             if (device.extended_controls) {
                 Column {
                     var sliderPosition by remember { mutableStateOf(0f) }
+                    sliderPosition = device.brightness?.toFloat()?.div(25.5f) ?: 0f
                     Slider(
                         value = sliderPosition,
                         valueRange = 0f..10f,
-                        onValueChange = { sliderPosition = it },
+                        onValueChange = {
+                            val brightnessValue = (it * 25.5f).toInt() // Convert slider position to brightness value
+                            sliderPosition = it
+                            corutineScope.launch {
+                                viewmodel.setBrightness(device, brightnessValue)
+                            } // Invoke the function on brightness change
+                        },
                     )
                 }
             }

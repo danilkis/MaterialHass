@@ -19,15 +19,14 @@ import androidx.compose.material.icons.filled.HeatPump
 import androidx.compose.material.icons.filled.LightbulbCircle
 import androidx.compose.material.icons.filled.RollerShades
 import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -39,7 +38,9 @@ import com.example.materialhass.customcomponents.RoomCircle
 import com.example.materialhass.customcomponents.TypeDivider
 import com.example.materialhass.models.Devices
 import com.example.materialhass.models.Room
+import com.example.materialhass.viewmodel.DevicesViewmodel
 import com.example.materialhass.viewmodel.RoomDevicesViewmodel
+import kotlinx.coroutines.launch
 
 @Composable
 fun RoomHeader(room: Room) {
@@ -84,13 +85,14 @@ fun RoomDevicesScreen(
     {
         RoomHeader(room)
         Divider()
-        DevicePage(devices_list)
+        DevicePage(viewModel, devices_list)
     }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DevicePage(devices: List<Devices>) {
+fun DevicePage(viewmodel: RoomDevicesViewmodel,devices: List<Devices>) {
+    val corutineScope = rememberCoroutineScope()
     val groupedDevices = devices.groupBy { it.type }
     FlowRow(
         modifier = Modifier
@@ -113,11 +115,11 @@ fun DevicePage(devices: List<Devices>) {
             }
             device.forEach { item ->
                 if (item.type == "light") {
-                    LightCard(item, Modifier.weight(0.25f))
+                    LightCard(item, Modifier.weight(0.25f), viewmodel = viewmodel)
 
                 }
                 if (item.type == "cover") {
-                    CoverCard(item, Modifier.weight(0.5f))
+                    //CoverCard(item, Modifier.weight(0.5f), viewmodel)
                     //if(rowDevices.size > 1) { CoverCard(rowDevices[1]) }
                 }
                 if (item.type == "climate") {

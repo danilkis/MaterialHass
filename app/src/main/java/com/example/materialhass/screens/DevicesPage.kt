@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.RollerShades
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -22,6 +23,7 @@ import com.example.materialhass.customcomponents.CoverCard
 import com.example.materialhass.customcomponents.LightCard
 import com.example.materialhass.customcomponents.TypeDivider
 import com.example.materialhass.viewmodel.DevicesViewmodel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -29,41 +31,57 @@ fun DevicesScreen(
     navController: NavController,
     viewModel: DevicesViewmodel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    val devices_list by viewModel.Devices.collectAsState(initial = mutableListOf())
-    val groupedDevices = devices_list.groupBy { it.type }
+    val devicesList by viewModel.Devices.collectAsState(initial = mutableListOf())
+    val groupedDevices = devicesList.groupBy { it.type }
+    val coroutineScope = rememberCoroutineScope()
+
+    val typeIconMap = mapOf(
+        "light" to Icons.Default.LightbulbCircle,
+        "cover" to Icons.Default.RollerShades,
+        "climate" to Icons.Default.HeatPump
+    )
+
     FlowRow(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 0.dp, top = 4.dp, end = 0.dp, bottom = 75.dp)
+            .padding(0.dp, 4.dp, 0.dp, 75.dp)
             .verticalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalArrangement = Arrangement.SpaceBetween,
         maxItemsInEachRow = 2
     ) {
-        groupedDevices.forEach { (type, device) ->
-            // This is your divider
-            when (type) {
-                "light" -> TypeDivider(type = "Свет", icon = Icons.Default.LightbulbCircle)
-                "cover" -> TypeDivider(type = "Жалюзи", icon = Icons.Default.RollerShades)
-                "climate" -> TypeDivider(type = "Климат", icon = Icons.Default.HeatPump)
-            }
-            device.forEach { item ->
+        groupedDevices.forEach { (type, devices) ->
+            typeIconMap[type]?.let { TypeDivider(type = getTypeName(type), icon = it) }
+
+            devices.forEach { item ->
                 when (item.type) {
                     "light" -> LightCard(
                         item,
                         Modifier
                             .padding(4.dp)
-                            .weight(0.5f)
+                            .weight(0.5f),
+                        viewModel
                     )
                     "cover" -> CoverCard(
                         item,
                         Modifier
                             .padding(4.dp)
-                            .weight(0.5f)
+                            .weight(0.5f),
+                        viewModel
                     )
                     "climate" -> ClimateCard(item, Modifier.padding(4.dp))
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun getTypeName(type: String): String {
+    return when (type) {
+        "light" -> "Свет"
+        "cover" -> "Жалюзи"
+        "climate" -> "Климат"
+        else -> ""
     }
 }

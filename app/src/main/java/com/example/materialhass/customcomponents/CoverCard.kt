@@ -20,20 +20,26 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.example.materialhass.models.Devices
+import com.example.materialhass.viewmodel.DevicesViewmodel
+import kotlinx.coroutines.launch
 
 @Composable
-fun CoverCard(devices: com.example.materialhass.models.Devices, modifier: Modifier) {
+fun CoverCard(devices: com.example.materialhass.models.Devices, modifier: Modifier, viewmodel: DevicesViewmodel) {
     var size by remember { mutableStateOf(IntSize.Zero) }
     Log.d("Test", "${devices.friendly_name} - $size")
+    val corutineScope = rememberCoroutineScope()
 
     OutlinedCard(modifier.onSizeChanged { size = it }) {
         Column(
@@ -54,16 +60,18 @@ fun CoverCard(devices: com.example.materialhass.models.Devices, modifier: Modifi
                         Text(devices.friendly_name, style = MaterialTheme.typography.bodyLarge)
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            devices.type,
+                            devices.state,
                             style = MaterialTheme.typography.bodyMedium
-                        ) //TODO: состояние устройства
+                        )
                     }
 
                     if (size.width > 700){
                         ManagementOutlinedIconButtons(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.End
+                            horizontalArrangement = Arrangement.End,
+                            viewmodel,
+                            devices
                         )
                     }
 
@@ -72,17 +80,18 @@ fun CoverCard(devices: com.example.materialhass.models.Devices, modifier: Modifi
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            if (size.width < 700){
+            if (!devices.extended_controls){
                 ManagementOutlinedIconButtons(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.Center,
+                    viewmodel,
+                    devices
                 )
             }else{
                 Column {
                     var sliderPosition by remember { mutableStateOf(0f) }
                     Slider(
-
                         value = sliderPosition,
                         valueRange = 0f..10f,
                         onValueChange = { sliderPosition = it },
@@ -102,29 +111,32 @@ fun CoverCard(devices: com.example.materialhass.models.Devices, modifier: Modifi
 fun ManagementOutlinedIconButtons(
     modifier: Modifier,
     verticalAlignment: Alignment.Vertical,
-    horizontalArrangement: Arrangement.Horizontal
+    horizontalArrangement: Arrangement.Horizontal,
+    viewmodel: DevicesViewmodel,
+    device: Devices
 ){
+    val courtineScope = rememberCoroutineScope()
     Row(
         modifier = modifier,
         verticalAlignment = verticalAlignment,
         horizontalArrangement = horizontalArrangement
     )
     {
-        OutlinedIconButton(onClick = { /*TODO*/ }) {
+        OutlinedIconButton(onClick = { courtineScope.launch { viewmodel.openCover(device) } }) {
             Icon(
                 Icons.Default.Upload,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
-        OutlinedIconButton(onClick = { /*TODO*/ }) {
+        OutlinedIconButton(onClick = { courtineScope.launch { viewmodel.stopCover(device) }  }) {
             Icon(
                 Icons.Default.Stop,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
-        OutlinedIconButton(onClick = { /*TODO*/ }) {
+        OutlinedIconButton(onClick = { courtineScope.launch { viewmodel.closeCover(device) }  }) {
             Icon(
                 Icons.Default.Download,
                 contentDescription = null,
