@@ -69,7 +69,7 @@ fun DevicesScreen(
                             .weight(0.5f),
                         viewModel
                     )
-                    "climate" -> ClimateCard(item, Modifier.padding(4.dp))
+                    "climate" -> ClimateCard(item, Modifier.padding(4.dp), viewModel)
                 }
             }
         }

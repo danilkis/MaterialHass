@@ -12,6 +12,15 @@ data class TurnOnWithBrightnessBody(
     val brightness: Int
 )
 
+data class PositionBody(
+    val entity_id: String,
+    val position: Int
+)
+
+data class TempBody(
+    val entity_id: String,
+    val temperature: Double
+)
 const val token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyOTY1Zjg2NTlmZWQ0ODhkODFiMjljMTdlYTg3ZDVmMiIsImlhdCI6MTY5OTg2NTgxMiwiZXhwIjoyMDE1MjI1ODEyfQ.EE7Z5S9-iqlxclalYtOEdlI8KmPTpJv6xfCzdAtfqg8"
 interface HomeAssistantAPI {
     @Headers("Authorization: Bearer ${token}")
@@ -26,8 +35,14 @@ interface HomeAssistantAPI {
     @POST("api/services/light/turn_on")
     suspend fun lightBrightness(@Body body: TurnOnWithBrightnessBody)
     @Headers("Authorization: Bearer ${token}")
-    @POST("api/services/light/toggle")
-    suspend fun toggleHvac(@Body body: ToggleBody)
+    @POST("api/services/climate/turn_on")
+    suspend fun onHvac(@Body body: ToggleBody)
+    @Headers("Authorization: Bearer ${token}")
+    @POST("api/services/climate/turn_off")
+    suspend fun offHvac(@Body body: ToggleBody)
+    @Headers("Authorization: Bearer ${token}")
+    @POST("api/services/climate/set_temperature")
+    suspend fun setTemperature(@Body body: TempBody)
     @Headers("Authorization: Bearer ${token}")
     @POST("api/services/cover/open_cover")
     suspend fun coverOpen(@Body body: ToggleBody)
@@ -38,8 +53,8 @@ interface HomeAssistantAPI {
     @POST("api/services/cover/stop_cover")
     suspend fun coverStop(@Body body: ToggleBody)
     @Headers("Authorization: Bearer ${token}")
-    @POST("api/services/cover/open_cover")
-    suspend fun openCover(@Body body: ToggleBody)
+    @POST("api/services/cover/set_cover_position")
+    suspend fun setCoverPosition(@Body body: PositionBody)
     @Headers("Authorization: Bearer ${token}")
     @POST("api/services/cover/close_cover")
     suspend fun closeCover(@Body body: ToggleBody)

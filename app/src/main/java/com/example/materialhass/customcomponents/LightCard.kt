@@ -29,7 +29,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.materialhass.models.Devices
 import com.example.materialhass.viewmodel.DevicesViewmodel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -65,7 +64,7 @@ fun LightCard(device: Devices, modifier: Modifier, viewmodel: DevicesViewmodel) 
                 OutlinedIconButton(onClick =
                 {
                     corutineScope.launch {
-                        viewmodel.toggleDevice(device)
+                        viewmodel.toggleLight(device)
                     }
                 }, enabled = device.state != "unavailable") {
                     Icon(

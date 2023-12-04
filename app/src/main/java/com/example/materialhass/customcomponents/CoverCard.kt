@@ -91,10 +91,17 @@ fun CoverCard(devices: com.example.materialhass.models.Devices, modifier: Modifi
             }else{
                 Column {
                     var sliderPosition by remember { mutableStateOf(0f) }
+                    sliderPosition = devices.position!!.toFloat()
                     Slider(
                         value = sliderPosition,
-                        valueRange = 0f..10f,
-                        onValueChange = { sliderPosition = it },
+                        valueRange = 0f..100f,
+                        onValueChange = {
+                            val position_value = it.toInt() // Convert slider position to brightness value
+                            sliderPosition = it
+                            corutineScope.launch {
+                                viewmodel.setPosition(devices, position_value)
+                            } // Invoke the function on brightness change
+                        },
                     )
                 }
             }

@@ -123,7 +123,7 @@ fun DevicePage(viewmodel: RoomDevicesViewmodel,devices: List<Devices>) {
                     //if(rowDevices.size > 1) { CoverCard(rowDevices[1]) }
                 }
                 if (item.type == "climate") {
-                    ClimateCard(item, Modifier.weight(0.5f).padding(4.dp))
+                    ClimateCard(item, Modifier.weight(0.5f).padding(4.dp), viewmodel)
                 }
             }
         }

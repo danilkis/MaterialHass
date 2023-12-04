@@ -1,5 +1,6 @@
 package com.example.materialhass.viewmodel
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AcUnit
 import androidx.compose.material.icons.filled.Blinds
@@ -7,6 +8,8 @@ import androidx.compose.material.icons.filled.DeviceHub
 import androidx.compose.material.icons.filled.Light
 import androidx.lifecycle.ViewModel
 import com.example.materialhass.API.HomeAssistantAPI
+import com.example.materialhass.API.PositionBody
+import com.example.materialhass.API.TempBody
 import com.example.materialhass.API.ToggleBody
 import com.example.materialhass.API.TurnOnWithBrightnessBody
 import com.example.materialhass.models.Devices
@@ -64,7 +67,9 @@ open class DevicesViewmodel : ViewModel() {
                     type = type,
                     icon = icon,
                     extended_controls = extended_controls,
-                    brightness = entity.attributes["brightness"] as Double?
+                    brightness = entity.attributes["brightness"] as Double?,
+                    position = entity.attributes["current_position"] as Double?,
+                    temperature = entity.attributes["temperature"] as Double?
                 )
             }
 
@@ -77,7 +82,7 @@ open class DevicesViewmodel : ViewModel() {
         _devices.emit(getDevices())
     }
 
-    suspend fun toggleDevice(device: Devices) {
+    suspend fun toggleLight(device: Devices) {
         return withContext(Dispatchers.IO) {
             val retrofit = Retrofit.Builder()
                 .baseUrl("https://pavlovskhome.ru/")
@@ -86,11 +91,7 @@ open class DevicesViewmodel : ViewModel() {
             // Create the API instance
             val api = retrofit.create(HomeAssistantAPI::class.java)
             val body = ToggleBody(entity_id = device.name) // replace "light.Ceiling" with your actual entity_id
-            when (device.type) {
-                "cover" -> api.closeCover(body)
-                "climate" -> api.toggleHvac(body)
-                "light" -> api.toggleLight(body)
-            }
+            api.toggleLight(body)
             reloadDevices()
         }
     }
@@ -148,6 +149,68 @@ open class DevicesViewmodel : ViewModel() {
             val body = ToggleBody(entity_id = device.name)
             api.coverStop(body)
             reloadDevices()
+        }
+    }
+    suspend fun setPosition(device: Devices, pos: Int) {
+        return withContext(Dispatchers.IO) {
+            val retrofit = Retrofit.Builder()
+                .baseUrl("https://pavlovskhome.ru/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+
+            val api = retrofit.create(HomeAssistantAPI::class.java)
+            val body = PositionBody(entity_id = device.name, position = pos)
+            Log.e("API", body.toString() + " | " + api.toString())
+            api.setCoverPosition(body)
+            reloadDevices()
+        }
+    }
+
+    suspend fun toggleClimate(device: Devices) {
+        try
+        {
+            return withContext(Dispatchers.IO) {
+                val retrofit = Retrofit.Builder()
+                    .baseUrl("https://pavlovskhome.ru/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                val api = retrofit.create(HomeAssistantAPI::class.java)
+                val body = ToggleBody(entity_id = device.name)
+                Log.e("API", body.toString() + "  |  " + device.state)
+                if(device.state != "off")
+                {
+                    api.offHvac(body)
+                }
+                else
+                {
+                    api.onHvac(body)
+                }
+                reloadDevices()
+            }
+        }
+        catch (e: Exception)
+        {
+            Log.e("API", "Climate error")
+        }
+    }
+    suspend fun setTemperature(device: Devices, temp: Double) {
+        try
+        {
+            return withContext(Dispatchers.IO) {
+                val retrofit = Retrofit.Builder()
+                    .baseUrl("https://pavlovskhome.ru/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                val api = retrofit.create(HomeAssistantAPI::class.java)
+                val body = TempBody(entity_id = device.name, temp)
+                Log.e("API", body.toString() + "  |  " + device.state)
+                api.setTemperature(body)
+                reloadDevices()
+            }
+        }
+        catch (e: Exception)
+        {
+            Log.e("API", "Climate error")
         }
     }
 }
