@@ -1,16 +1,27 @@
 package com.example.materialhass.viewmodel
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AcUnit
 import androidx.compose.material.icons.filled.Bed
 import androidx.compose.material.icons.filled.Bento
+import androidx.compose.material.icons.filled.Blinds
+import androidx.compose.material.icons.filled.DeviceHub
+import androidx.compose.material.icons.filled.Light
+import androidx.compose.material.icons.filled.Room
 import androidx.lifecycle.ViewModel
+import com.example.materialhass.API.HomeAssistantAPI
+import com.example.materialhass.API.TemplateBody
+import com.example.materialhass.models.Devices
 import com.example.materialhass.models.Room
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class RoomsViewmodel : ViewModel() {
     private val _rooms = MutableStateFlow<MutableList<Room>>(mutableListOf())
@@ -24,27 +35,50 @@ class RoomsViewmodel : ViewModel() {
     }
 
     suspend fun getRooms(): MutableList<Room> {
-        return withContext(Dispatchers.Main) {
-            val roomList: MutableList<Room> = mutableListOf()
-            roomList.add(
-                Room(
-                    0,
-                    "Кухня",
-                    "https://proreiling.ru/wp-content/uploads/5/9/d/59d46a21ac5629beea300f92ad418b98.png",
-                    Icons.Default.Bento
-                )
+        return withContext(Dispatchers.IO) {
+            val gson = GsonBuilder().setLenient().create()
+            val retrofit = Retrofit.Builder()
+                .baseUrl("https://pavlovskhome.ru/") // Replace with your base URL
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build()
+
+            // Create the API instance
+            val api = retrofit.create(HomeAssistantAPI::class.java) // Replace YourAPI with your actual API interface
+
+            // Make the request using the appropriate API call
+            val response = api.getRooms(TemplateBody("{{ areas() }}"))
+
+            // Process the response and convert it into a list of Room objects
+            val roomList = mutableListOf<Room>()
+            val translitToRussian = mapOf(
+                "gostinaia" to "Гостиная",
+                "kukhnia" to "Кухня",
+                "spalnia" to "Спальня",
+                "dvor" to "Двор"
+                // Добавьте другие комнаты по аналогии, если нужно
             )
-            roomList.add(
-                Room(
-                    1,
-                    "Спальня",
-                    "https://mydizajn.ru/wp-content/uploads/2016/11/Modern-Bedroom-3-1.jpg",
-                    Icons.Default.Bed
+            response.forEachIndexed { index, roomName ->
+                // You can create Room objects based on the room names received from the API
+                // You might need to fetch images and icons for each room based on their names or IDs
+                // For now, this example uses placeholders for images and icons
+
+
+                // This is a placeholder URL, replace it with actual URLs if availabl
+                val russianName = translitToRussian[roomName] ?: roomName
+                roomList.add(
+                    Room(
+                        id = index,
+                        name = roomName,
+                        picture_Url = "https://vita-property.ru/wp-content/uploads/a/c/6/ac6cbd136254d7841f86714d1acbba5c.jpeg",
+                        icon = Icons.Default.DeviceHub
+                    )
                 )
-            ) //TODO: Затычка
+            }
+
             return@withContext roomList
         }
     }
+
 
     suspend fun reloadRooms() {
         _rooms.emit(getRooms())

@@ -7,6 +7,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 data class ToggleBody(val entity_id: String)
+    data class TemplateBody(val template: String)
 data class TurnOnWithBrightnessBody(
     val entity_id: String,
     val brightness: Int
@@ -55,9 +56,14 @@ interface HomeAssistantAPI {
     @Headers("Authorization: Bearer ${token}")
     @POST("api/services/cover/set_cover_position")
     suspend fun setCoverPosition(@Body body: PositionBody)
+
     @Headers("Authorization: Bearer ${token}")
-    @POST("api/services/cover/close_cover")
-    suspend fun closeCover(@Body body: ToggleBody)
+    @POST("api/template")
+    suspend fun getRooms(@Body body: TemplateBody): List<String>
+
+    @Headers("Authorization: Bearer ${token}")
+    @POST("api/template")
+    suspend fun getRoomDevices(@Body body: TemplateBody): List<String>
 
     @Headers("Authorization: Bearer ${token}")
     @GET("api/states/{entity_id}")

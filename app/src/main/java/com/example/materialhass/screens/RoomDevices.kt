@@ -22,6 +22,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,13 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.materialhass.customcomponents.ClimateCard
-import com.example.materialhass.customcomponents.CoverCard
 import com.example.materialhass.customcomponents.LightCard
 import com.example.materialhass.customcomponents.RoomCircle
 import com.example.materialhass.customcomponents.TypeDivider
 import com.example.materialhass.models.Devices
 import com.example.materialhass.models.Room
-import com.example.materialhass.viewmodel.DevicesViewmodel
 import com.example.materialhass.viewmodel.RoomDevicesViewmodel
 import kotlinx.coroutines.launch
 
@@ -81,6 +80,8 @@ fun RoomDevicesScreen(
     viewModel: RoomDevicesViewmodel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     val devices_list by viewModel.Devices.collectAsState(initial = mutableListOf())
+    viewModel.roomName = room.name
+    LaunchedEffect(Unit) { viewModel.roomDevices() }
     Column(modifier = Modifier.fillMaxSize())
     {
         RoomHeader(room)
@@ -91,7 +92,7 @@ fun RoomDevicesScreen(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DevicePage(viewmodel: RoomDevicesViewmodel,devices: List<Devices>) {
+fun DevicePage(viewmodel: RoomDevicesViewmodel, devices: List<Devices>) {
     val corutineScope = rememberCoroutineScope()
     val groupedDevices = devices.groupBy { it.type }
     FlowRow(
@@ -123,7 +124,10 @@ fun DevicePage(viewmodel: RoomDevicesViewmodel,devices: List<Devices>) {
                     //if(rowDevices.size > 1) { CoverCard(rowDevices[1]) }
                 }
                 if (item.type == "climate") {
-                    ClimateCard(item, Modifier.weight(0.5f).padding(4.dp), viewmodel)
+                    ClimateCard(item,
+                        Modifier
+                            .weight(0.5f)
+                            .padding(4.dp), viewmodel)
                 }
             }
         }
