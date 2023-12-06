@@ -36,7 +36,7 @@ import com.example.materialhass.viewmodel.DevicesViewmodel
 import kotlinx.coroutines.launch
 
 @Composable
-fun CoverCard(devices: com.example.materialhass.models.Devices, modifier: Modifier, viewmodel: DevicesViewmodel) {
+fun CoverCard(devices: Devices, modifier: Modifier, viewmodel: DevicesViewmodel) {
     var size by remember { mutableStateOf(IntSize.Zero) }
     Log.d("Test", "${devices.friendly_name} - $size")
     val corutineScope = rememberCoroutineScope()
@@ -56,7 +56,7 @@ fun CoverCard(devices: com.example.materialhass.models.Devices, modifier: Modifi
                 {
                     DeviceCircle(id = "0", icon = devices.icon)
                     Spacer(Modifier.width(10.dp))
-                    Column() { //modifier = Modifier.weight(1f)
+                    Column { //modifier = Modifier.weight(1f)
                         Text(devices.friendly_name, style = MaterialTheme.typography.bodyLarge)
                         Spacer(Modifier.height(4.dp))
                         Text(

@@ -17,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HeatPump
 import androidx.compose.material.icons.filled.LightbulbCircle
+import androidx.compose.material.icons.filled.RadioButtonChecked
 import androidx.compose.material.icons.filled.RollerShades
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -33,13 +34,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.materialhass.customcomponents.ClimateCard
+import com.example.materialhass.customcomponents.CoverCard
 import com.example.materialhass.customcomponents.LightCard
 import com.example.materialhass.customcomponents.RoomCircle
+import com.example.materialhass.customcomponents.SwitchCard
 import com.example.materialhass.customcomponents.TypeDivider
 import com.example.materialhass.models.Devices
 import com.example.materialhass.models.Room
 import com.example.materialhass.viewmodel.RoomDevicesViewmodel
-import kotlinx.coroutines.launch
 
 @Composable
 fun RoomHeader(room: Room) {
@@ -63,7 +65,7 @@ fun RoomHeader(room: Room) {
         {
             RoomCircle(icon = room.icon, size = 55.dp)
             Spacer(Modifier.width(10.dp))
-            Column() {
+            Column {
                 Text(room.name, style = MaterialTheme.typography.headlineMedium)
                 Spacer(Modifier.height(4.dp))
                 Text(room.id.toString(), style = MaterialTheme.typography.headlineSmall)
@@ -79,8 +81,8 @@ fun RoomDevicesScreen(
     navController: NavController,
     viewModel: RoomDevicesViewmodel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    val devices_list by viewModel.Devices.collectAsState(initial = mutableListOf())
     viewModel.roomName = room.name
+    val devices_list by viewModel.filteredDevices.collectAsState(initial = mutableListOf())
     LaunchedEffect(Unit) { viewModel.roomDevices() }
     Column(modifier = Modifier.fillMaxSize())
     {
@@ -92,7 +94,13 @@ fun RoomDevicesScreen(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DevicePage(viewmodel: RoomDevicesViewmodel, devices: List<Devices>) {
+fun DevicePage(viewModel: RoomDevicesViewmodel, devices: List<Devices>) {
+    val typeIconMap = mapOf(
+        "light" to Icons.Default.LightbulbCircle,
+        "cover" to Icons.Default.RollerShades,
+        "climate" to Icons.Default.HeatPump,
+        "switch" to Icons.Default.RadioButtonChecked
+    )
     val corutineScope = rememberCoroutineScope()
     val groupedDevices = devices.groupBy { it.type }
     FlowRow(
@@ -103,33 +111,40 @@ fun DevicePage(viewmodel: RoomDevicesViewmodel, devices: List<Devices>) {
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         maxItemsInEachRow = 2
     ) {
-        groupedDevices.forEach { (type, device) ->
-            // This is your divider
-            if (type == "light") {
-                TypeDivider(type = "Свет", icon = Icons.Default.LightbulbCircle)
-            }
-            if (type == "cover") {
-                TypeDivider(type = "Жалюзи", icon = Icons.Default.RollerShades)
-            }
-            if (type == "climate") {
-                TypeDivider(type = "Климат", icon = Icons.Default.HeatPump)
-            }
-            device.forEach { item ->
-                if (item.type == "light") {
-                    LightCard(item, Modifier.weight(0.25f), viewmodel = viewmodel)
+        groupedDevices.forEach { (type, devices) ->
+            typeIconMap[type]?.let { TypeDivider(type = getTypeName(type), icon = it) }
 
-                }
-                if (item.type == "cover") {
-                    //CoverCard(item, Modifier.weight(0.5f), viewmodel)
-                    //if(rowDevices.size > 1) { CoverCard(rowDevices[1]) }
-                }
-                if (item.type == "climate") {
-                    ClimateCard(item,
+            devices.forEach { item ->
+                when (item.type) {
+                    "light" -> LightCard(
+                        item,
                         Modifier
-                            .weight(0.5f)
-                            .padding(4.dp), viewmodel)
+                            .padding(4.dp)
+                            .weight(0.5f),
+                        viewModel
+                    )
+                    "cover" -> CoverCard(
+                        item,
+                        Modifier
+                            .padding(4.dp)
+                            .weight(0.5f),
+                        viewModel
+                    )
+                    "climate" -> ClimateCard(item, Modifier.padding(4.dp), viewModel)
+                    "switch" -> SwitchCard(item, Modifier.padding(4.dp), viewModel)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun getTypeName(type: String): String {
+    return when (type) {
+        "light" -> "Свет"
+        "cover" -> "Жалюзи"
+        "climate" -> "Климат"
+        "switch" -> "Переключатель"
+        else -> ""
     }
 }

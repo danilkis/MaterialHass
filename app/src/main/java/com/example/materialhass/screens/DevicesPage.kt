@@ -10,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HeatPump
 import androidx.compose.material.icons.filled.LightbulbCircle
+import androidx.compose.material.icons.filled.RadioButtonChecked
 import androidx.compose.material.icons.filled.RollerShades
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,9 +22,9 @@ import androidx.navigation.NavController
 import com.example.materialhass.customcomponents.ClimateCard
 import com.example.materialhass.customcomponents.CoverCard
 import com.example.materialhass.customcomponents.LightCard
+import com.example.materialhass.customcomponents.SwitchCard
 import com.example.materialhass.customcomponents.TypeDivider
 import com.example.materialhass.viewmodel.DevicesViewmodel
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -38,7 +39,8 @@ fun DevicesScreen(
     val typeIconMap = mapOf(
         "light" to Icons.Default.LightbulbCircle,
         "cover" to Icons.Default.RollerShades,
-        "climate" to Icons.Default.HeatPump
+        "climate" to Icons.Default.HeatPump,
+        "switch" to Icons.Default.RadioButtonChecked
     )
 
     FlowRow(
@@ -48,7 +50,7 @@ fun DevicesScreen(
             .verticalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalArrangement = Arrangement.SpaceBetween,
-        maxItemsInEachRow = 2
+        maxItemsInEachRow = 3
     ) {
         groupedDevices.forEach { (type, devices) ->
             typeIconMap[type]?.let { TypeDivider(type = getTypeName(type), icon = it) }
@@ -70,6 +72,7 @@ fun DevicesScreen(
                         viewModel
                     )
                     "climate" -> ClimateCard(item, Modifier.padding(4.dp), viewModel)
+                    "switch" -> SwitchCard(item, Modifier.padding(4.dp), viewModel)
                 }
             }
         }
@@ -82,6 +85,7 @@ private fun getTypeName(type: String): String {
         "light" -> "Свет"
         "cover" -> "Жалюзи"
         "climate" -> "Климат"
+        "switch" -> "Переключатель"
         else -> ""
     }
 }

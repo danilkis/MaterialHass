@@ -39,7 +39,6 @@ open class DevicesViewmodel : ViewModel() {
                 .baseUrl("https://pavlovskhome.ru/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-
             // Create the API instance
             val api = retrofit.create(HomeAssistantAPI::class.java)
 
@@ -47,7 +46,7 @@ open class DevicesViewmodel : ViewModel() {
             val entities = api.getStates()
 
             // Filter the entities
-            val filteredEntities = entities.filter { it.entity_id.startsWith("cover.") || it.entity_id.startsWith("climate.") || it.entity_id.startsWith("light.") }
+            val filteredEntities = entities.filter {it.entity_id.startsWith("switch.") || it.entity_id.startsWith("cover.") || it.entity_id.startsWith("climate.") || it.entity_id.startsWith("light.") }
             // Convert the filtered entities into a list of Devices
             val deviceList = filteredEntities.mapIndexed { index, entity ->
                 val type = entity.entity_id.split(".")[0]
@@ -92,6 +91,20 @@ open class DevicesViewmodel : ViewModel() {
             val api = retrofit.create(HomeAssistantAPI::class.java)
             val body = ToggleBody(entity_id = device.name) // replace "light.Ceiling" with your actual entity_id
             api.toggleLight(body)
+            reloadDevices()
+        }
+    }
+
+    suspend fun toggleSwitch(device: Devices) {
+        return withContext(Dispatchers.IO) {
+            val retrofit = Retrofit.Builder()
+                .baseUrl("https://pavlovskhome.ru/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+            // Create the API instance
+            val api = retrofit.create(HomeAssistantAPI::class.java)
+            val body = ToggleBody(entity_id = device.name) // replace "light.Ceiling" with your actual entity_id
+            api.toggleSwitch(body)
             reloadDevices()
         }
     }

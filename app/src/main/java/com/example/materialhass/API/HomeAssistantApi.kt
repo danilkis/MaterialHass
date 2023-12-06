@@ -33,6 +33,10 @@ interface HomeAssistantAPI {
     suspend fun toggleLight(@Body body: ToggleBody)
 
     @Headers("Authorization: Bearer ${token}")
+    @POST("api/services/switch/toggle")
+    suspend fun toggleSwitch(@Body body: ToggleBody)
+
+    @Headers("Authorization: Bearer ${token}")
     @POST("api/services/light/turn_on")
     suspend fun lightBrightness(@Body body: TurnOnWithBrightnessBody)
     @Headers("Authorization: Bearer ${token}")

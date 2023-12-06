@@ -67,7 +67,7 @@ fun RoomCard(room: Room, additional: String, navController: NavController) {
             {
                 RoomCircle(icon = room.icon)
                 Spacer(Modifier.width(10.dp))
-                Column() {
+                Column {
                     Text(room.name)
                     Spacer(Modifier.height(4.dp))
                     Text(additional)
