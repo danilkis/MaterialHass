@@ -50,12 +50,6 @@ open class DevicesViewmodel : ViewModel() {
             // Convert the filtered entities into a list of Devices
             val deviceList = filteredEntities.mapIndexed { index, entity ->
                 val type = entity.entity_id.split(".")[0]
-                val icon = when (type) {
-                    "cover" -> Icons.Default.Blinds
-                    "climate" -> Icons.Default.AcUnit
-                    "light" -> Icons.Default.Light
-                    else -> Icons.Default.DeviceHub
-                }
                 val extended_controls = entity.attributes["current_position"] != null || entity.attributes["light.brightness"] != null || entity.attributes["brightness"] != null
 
                 Devices(
@@ -64,7 +58,7 @@ open class DevicesViewmodel : ViewModel() {
                     friendly_name = entity.attributes["friendly_name"] as String,
                     state = entity.state,
                     type = type,
-                    icon = icon,
+                    icon = entity.attributes["icon"] as String? ?: "circle",
                     extended_controls = extended_controls,
                     brightness = entity.attributes["brightness"] as Double?,
                     position = entity.attributes["current_position"] as Double?,

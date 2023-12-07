@@ -8,7 +8,7 @@ data class Devices(
     val friendly_name: String,
     val type: String,
     val state: String,
-    val icon: ImageVector,
+    val icon: String,
     val extended_controls: Boolean,
     val brightness: Double?,
     val position: Double?,
