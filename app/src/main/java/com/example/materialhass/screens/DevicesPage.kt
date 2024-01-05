@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.RollerShades
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -24,6 +23,7 @@ import com.example.materialhass.customcomponents.CoverCard
 import com.example.materialhass.customcomponents.LightCard
 import com.example.materialhass.customcomponents.SwitchCard
 import com.example.materialhass.customcomponents.TypeDivider
+import com.example.materialhass.model.Device
 import com.example.materialhass.viewmodel.DevicesViewmodel
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -32,15 +32,20 @@ fun DevicesScreen(
     navController: NavController,
     viewModel: DevicesViewmodel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    val devicesList by viewModel.Devices.collectAsState(initial = mutableListOf())
-    val groupedDevices = devicesList.groupBy { it.type }
-    val coroutineScope = rememberCoroutineScope()
+    val devicesList by viewModel.device.collectAsState(initial = mutableListOf())
 
     val typeIconMap = mapOf(
         "light" to Icons.Default.LightbulbCircle,
         "cover" to Icons.Default.RollerShades,
         "climate" to Icons.Default.HeatPump,
         "switch" to Icons.Default.RadioButtonChecked
+    )
+
+    val devicesMap = mapOf(
+        "light" to getDevicesByType("light", devicesList),
+        "cover" to getDevicesByType("cover", devicesList),
+        "climate" to getDevicesByType("climate", devicesList),
+        "switch" to getDevicesByType("switch", devicesList),
     )
 
     FlowRow(
@@ -52,31 +57,23 @@ fun DevicesScreen(
         verticalArrangement = Arrangement.SpaceBetween,
         maxItemsInEachRow = 3
     ) {
-        groupedDevices.forEach { (type, devices) ->
-            typeIconMap[type]?.let { TypeDivider(type = getTypeName(type), icon = it) }
-
-            devices.forEach { item ->
-                when (item.type) {
-                    "light" -> LightCard(
-                        item,
-                        Modifier
-                            .padding(4.dp)
-                            .weight(0.5f),
-                        viewModel
-                    )
-                    "cover" -> CoverCard(
-                        item,
-                        Modifier
-                            .padding(4.dp)
-                            .weight(0.5f),
-                        viewModel
-                    )
-                    "climate" -> ClimateCard(item, Modifier.padding(4.dp), viewModel)
-                    "switch" -> SwitchCard(item, Modifier.padding(4.dp), viewModel)
-                }
+        val modifier = Modifier
+            .padding(4.dp)
+            .weight(0.5f)
+        devicesMap.forEach { type ->
+            typeIconMap[type.key]?.let { TypeDivider(type = getTypeName(type.key), icon = it) }
+            when(type.key) {
+                "light" -> type.value.forEach { device ->  LightCard(device, modifier, viewModel)}
+                "cover" -> type.value.forEach { device ->  CoverCard(device, modifier, viewModel) }
+                "climate" -> type.value.forEach { device ->  ClimateCard(device, modifier, viewModel) }
+                "switch" -> type.value.forEach { device ->  SwitchCard(device, modifier, viewModel) }
             }
         }
     }
+}
+
+fun getDevicesByType(type: String, devices: List<Device>): List<Device> {
+    return devices.filter {it.type == type }
 }
 
 @Composable

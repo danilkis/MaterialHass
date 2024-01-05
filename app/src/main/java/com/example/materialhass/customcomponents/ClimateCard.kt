@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AcUnit
 import androidx.compose.material.icons.filled.Minimize
 import androidx.compose.material.icons.filled.PlusOne
 import androidx.compose.material.icons.filled.PowerSettingsNew
@@ -23,14 +22,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.materialhass.models.Devices
+import com.example.materialhass.model.Device
 import com.example.materialhass.viewmodel.DevicesViewmodel
 import kotlinx.coroutines.launch
 
 @Composable
-fun ClimateCard(device: Devices, modifier: Modifier, viewmodel: DevicesViewmodel) {
+fun ClimateCard(device: Device, modifier: Modifier, viewmodel: DevicesViewmodel) {
     OutlinedCard(modifier) {
         val corutineScope = rememberCoroutineScope()
         Column(

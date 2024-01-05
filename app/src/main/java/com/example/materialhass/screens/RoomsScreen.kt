@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.materialhass.customcomponents.RoomCard
-import com.example.materialhass.models.Room
+import com.example.materialhass.model.Room
 import com.example.materialhass.viewmodel.RoomsViewmodel
 
 @Composable

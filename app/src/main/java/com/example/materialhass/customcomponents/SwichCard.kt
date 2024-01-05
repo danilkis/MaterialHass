@@ -22,13 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.materialhass.models.Devices
+import com.example.materialhass.model.Device
 import com.example.materialhass.viewmodel.DevicesViewmodel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun SwitchCard(device: Devices, modifier: Modifier, viewmodel: DevicesViewmodel) {
+fun SwitchCard(device: Device, modifier: Modifier, viewmodel: DevicesViewmodel) {
     val corutineScope = rememberCoroutineScope()
     OutlinedCard(modifier) {
         Column(

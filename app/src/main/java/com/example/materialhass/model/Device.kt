@@ -1,8 +1,6 @@
-package com.example.materialhass.models
+package com.example.materialhass.model
 
-import androidx.compose.ui.graphics.vector.ImageVector
-
-data class Devices(
+data class Device(
     val id: Int,
     val name: String,
     val friendly_name: String,

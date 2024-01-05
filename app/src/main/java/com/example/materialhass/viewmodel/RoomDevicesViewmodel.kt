@@ -1,23 +1,20 @@
 package com.example.materialhass.viewmodel
 
 import android.util.Log
-import com.example.materialhass.API.HomeAssistantAPI
 import com.example.materialhass.API.TemplateBody
-import com.example.materialhass.models.Devices
-import com.google.gson.GsonBuilder
+import com.example.materialhass.Services.APIService
+import com.example.materialhass.model.Device
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class RoomDevicesViewmodel : DevicesViewmodel() {
-    private val _filterDevices = MutableStateFlow<MutableList<Devices>>(mutableListOf())
+    private val _filterDevice = MutableStateFlow<MutableList<Device>>(mutableListOf())
 
-    var filteredDevices: StateFlow<MutableList<Devices>> = _filterDevices
+    var filteredDevice: StateFlow<MutableList<Device>> = _filterDevice
 
     var roomName: String = ""
 
@@ -27,15 +24,9 @@ class RoomDevicesViewmodel : DevicesViewmodel() {
         }
     }
 
-    suspend fun roomDevices(): MutableList<Devices> {
+    suspend fun roomDevices(): MutableList<Device> {
         return withContext(Dispatchers.IO) {
-            val gson = GsonBuilder().setLenient().create()
-            val retrofit = Retrofit.Builder()
-                .baseUrl("https://pavlovskhome.ru/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build()
-
-            val api = retrofit.create(HomeAssistantAPI::class.java)
+            val api = APIService.getAPI();
             // Make the request using the appropriate API call with the roomName parameter
             val response = api.getRoomDevices(TemplateBody("{{ area_entities('$roomName') }}"))
             Log.e("API ROOMS RESPONCE", response.toString())
@@ -48,6 +39,6 @@ class RoomDevicesViewmodel : DevicesViewmodel() {
     }
 
     suspend fun reloadFilteredDevices() {
-        _filterDevices.emit(roomDevices())
+        _filterDevice.emit(roomDevices())
     }
 }
