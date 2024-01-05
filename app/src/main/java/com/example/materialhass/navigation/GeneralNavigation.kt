@@ -33,10 +33,9 @@ fun GeneralNavigation() {
             MainScreen(navController)
             //Переход на главный экран
         }
-        composable(
-            "room/{roomId}",
-            arguments = listOf(navArgument("roomId") { type = NavType.IntType })
-        ) {
+        composable("room/{roomId}",
+            arguments = listOf(navArgument("roomId") { type = NavType.IntType })) {
+            
             val roomId: Int = it.arguments?.getInt("roomId") ?: 0
             rooms.forEach {
                 if (it.id == roomId) {

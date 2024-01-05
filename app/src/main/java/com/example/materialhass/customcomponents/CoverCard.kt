@@ -20,7 +20,6 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,14 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.example.materialhass.models.Devices
+import com.example.materialhass.model.Device
 import com.example.materialhass.viewmodel.DevicesViewmodel
 import kotlinx.coroutines.launch
 
 @Composable
-fun CoverCard(devices: Devices, modifier: Modifier, viewmodel: DevicesViewmodel) {
+fun CoverCard(device: Device, modifier: Modifier, viewmodel: DevicesViewmodel) {
     var size by remember { mutableStateOf(IntSize.Zero) }
-    Log.d("Test", "${devices.friendly_name} - $size")
+    Log.d("Test", "${device.friendly_name} - $size")
     val corutineScope = rememberCoroutineScope()
 
     OutlinedCard(modifier.onSizeChanged { size = it }) {
@@ -54,13 +53,13 @@ fun CoverCard(devices: Devices, modifier: Modifier, viewmodel: DevicesViewmodel)
             {
                 Row()
                 {
-                    DeviceCircle(id = "0", icon = devices.icon)
+                    DeviceCircle(id = "0", icon = device.icon)
                     Spacer(Modifier.width(10.dp))
                     Column { //modifier = Modifier.weight(1f)
-                        Text(devices.friendly_name, style = MaterialTheme.typography.bodyLarge)
+                        Text(device.friendly_name, style = MaterialTheme.typography.bodyLarge)
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            devices.state,
+                            device.state,
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -71,7 +70,7 @@ fun CoverCard(devices: Devices, modifier: Modifier, viewmodel: DevicesViewmodel)
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.End,
                             viewmodel,
-                            devices
+                            device
                         )
                     }
 
@@ -80,18 +79,18 @@ fun CoverCard(devices: Devices, modifier: Modifier, viewmodel: DevicesViewmodel)
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            if (!devices.extended_controls){
+            if (!device.extended_controls){
                 ManagementOutlinedIconButtons(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
                     viewmodel,
-                    devices
+                    device
                 )
             }else{
                 Column {
                     var sliderPosition by remember { mutableStateOf(0f) }
-                    sliderPosition = devices.position!!.toFloat()
+                    sliderPosition = device.position!!.toFloat()
                     Slider(
                         value = sliderPosition,
                         valueRange = 0f..100f,
@@ -99,7 +98,7 @@ fun CoverCard(devices: Devices, modifier: Modifier, viewmodel: DevicesViewmodel)
                             val position_value = it.toInt() // Convert slider position to brightness value
                             sliderPosition = it
                             corutineScope.launch {
-                                viewmodel.setPosition(devices, position_value)
+                                viewmodel.setPosition(device, position_value)
                             } // Invoke the function on brightness change
                         },
                     )
@@ -120,7 +119,7 @@ fun ManagementOutlinedIconButtons(
     verticalAlignment: Alignment.Vertical,
     horizontalArrangement: Arrangement.Horizontal,
     viewmodel: DevicesViewmodel,
-    device: Devices
+    device: Device
 ){
     val courtineScope = rememberCoroutineScope()
     Row(

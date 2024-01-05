@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.example.materialhass.models.Room
+import com.example.materialhass.model.Room
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

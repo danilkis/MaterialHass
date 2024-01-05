@@ -39,8 +39,8 @@ import com.example.materialhass.customcomponents.LightCard
 import com.example.materialhass.customcomponents.RoomCircle
 import com.example.materialhass.customcomponents.SwitchCard
 import com.example.materialhass.customcomponents.TypeDivider
-import com.example.materialhass.models.Devices
-import com.example.materialhass.models.Room
+import com.example.materialhass.model.Device
+import com.example.materialhass.model.Room
 import com.example.materialhass.viewmodel.RoomDevicesViewmodel
 
 @Composable
@@ -82,7 +82,7 @@ fun RoomDevicesScreen(
     viewModel: RoomDevicesViewmodel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     viewModel.roomName = room.name
-    val devices_list by viewModel.filteredDevices.collectAsState(initial = mutableListOf())
+    val devices_list by viewModel.filteredDevice.collectAsState(initial = mutableListOf())
     LaunchedEffect(Unit) { viewModel.roomDevices() }
     Column(modifier = Modifier.fillMaxSize())
     {
@@ -94,7 +94,7 @@ fun RoomDevicesScreen(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DevicePage(viewModel: RoomDevicesViewmodel, devices: List<Devices>) {
+fun DevicePage(viewModel: RoomDevicesViewmodel, devices: List<Device>) {
     val typeIconMap = mapOf(
         "light" to Icons.Default.LightbulbCircle,
         "cover" to Icons.Default.RollerShades,

@@ -7,7 +7,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 data class ToggleBody(val entity_id: String)
-    data class TemplateBody(val template: String)
+data class TemplateBody(val template: String)
 data class TurnOnWithBrightnessBody(
     val entity_id: String,
     val brightness: Int
@@ -22,7 +22,7 @@ data class TempBody(
     val entity_id: String,
     val temperature: Double
 )
-const val token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI0MDZhMWNlOTJlMTM0MTYwYTJkM2QxN2NmNzdmMjBkMSIsImlhdCI6MTcwNDE5MTc2MCwiZXhwIjoyMDE5NTUxNzYwfQ.05MtZU0U25fO8R83fjlssM4INjVXJCoOHAamF3Q5tiI"
+const val token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyZTBkZjcyOWEyN2I0ODZmOTBlMmM5Y2I2MDVhNjUwYyIsImlhdCI6MTcwMjQwMDI2MiwiZXhwIjoyMDE3NzYwMjYyfQ.we-FLVcel99wNJHT8jc8bgS5Yw4PkMGlpnwYN5xK4Cc"
 interface HomeAssistantAPI {
     @Headers("Authorization: Bearer ${token}")
     @GET("api/states")

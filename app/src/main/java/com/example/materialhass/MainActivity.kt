@@ -19,9 +19,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialHassTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
-                ) {
+                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     GeneralNavigation()
                 }
             }
@@ -31,9 +29,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!", modifier = modifier
-    )
+    Text(text = "Hello $name!", modifier = modifier)
 }
 
 @Preview(showBackground = true)
