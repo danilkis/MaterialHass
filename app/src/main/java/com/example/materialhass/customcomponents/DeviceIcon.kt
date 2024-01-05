@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.example.materialhass.R
 import okio.ByteString.Companion.decodeHex
 import java.io.File
+import kotlin.math.min
 
 @Composable
 fun DeviceCircle(
@@ -56,13 +57,13 @@ fun FontIcon(
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified
 ) {
-    val font = Font(R.font.webfont, FontWeight.Normal)
-    val fontFamily = FontFamily(font)
     val context = LocalContext.current
+    val font = FontFamily(Font((R.font.webfont)))
     val unicodeChar = CheckEnum(iconName)
+    //Log.e("IconFinal", unicodeChar.toString())
     Text(
-        text = unicodeChar.toString(),
-        fontFamily = fontFamily,
+        text = unicodeChar,
+        fontFamily = font,
         fontWeight = FontWeight.Normal,
         modifier = modifier,
         color = color,
@@ -70,23 +71,42 @@ fun FontIcon(
     )
 }
 
-fun CheckEnum(iconName: String): Char {
+
+
+fun CheckEnum(iconName: String): String {
     return try {
-        val enumValue = IconValue.valueOf(transformString(iconName))
-        val number = enumValue.ordinal + 1
-        val paddedNumber = String.format("%04d", number) // Padding to at least four digits
-        val unicodeChar = (0xF000 + paddedNumber.toInt()).toChar()
-        Log.e("ICONS", "${paddedNumber.decodeHex()}")
-        unicodeChar
+        val symbolHex = try {
+            IconValue.valueOf(transformString(iconName)).hex
+        } catch (e: IllegalArgumentException) {
+            try {
+                IconValue2.valueOf(transformString(iconName)).hex
+            } catch (e: IllegalArgumentException) {
+                try {
+                    IconValue3.valueOf(transformString(iconName)).hex
+                } catch (e: IllegalArgumentException) {
+                    IconValue4.valueOf(transformString(iconName)).hex
+                }
+            }
+        }
+        val res = hexToUnicode(symbolHex)
+        Log.e("ICONS", symbolHex.toString())
+        Log.e("ICONS", res.toString())
+        res
     } catch (e: IllegalArgumentException) {
-        Log.e("ICONS", "NOT FOUND: $iconName")
-        (0xF000).toChar()
+        Log.e("ICONS", e.toString())
+        "\u0765"
     }
 }
 
+fun hexToUnicode(hex: String): String {
+    val codePoint = hex.toInt(radix = 16)
+    return String(Character.toChars(codePoint))
+}
+
+
 
 fun transformString(input: String): String {
-    val capitalized = input.toUpperCase()
+    val capitalized = input.uppercase()
     val replaced = capitalized.replace("-", "_")
     val removedPrefix = if (replaced.startsWith("MDI:")) {
         replaced.substring(4)
@@ -94,13 +114,4 @@ fun transformString(input: String): String {
         replaced
     }
     return removedPrefix
-}
-
-
-
-@Preview
-@Composable
-fun font_test()
-{
-    FontIcon(iconName = "access_point", color = MaterialTheme.colorScheme.onPrimary)
 }

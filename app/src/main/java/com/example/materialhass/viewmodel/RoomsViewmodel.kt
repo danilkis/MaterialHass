@@ -58,13 +58,6 @@ class RoomsViewmodel : ViewModel() {
                 // Добавьте другие комнаты по аналогии, если нужно
             )
             response.forEachIndexed { index, roomName ->
-                // You can create Room objects based on the room names received from the API
-                // You might need to fetch images and icons for each room based on their names or IDs
-                // For now, this example uses placeholders for images and icons
-
-
-                // This is a placeholder URL, replace it with actual URLs if availabl
-                val russianName = translitToRussian[roomName] ?: roomName
                 roomList.add(
                     Room(
                         id = index,
@@ -78,10 +71,7 @@ class RoomsViewmodel : ViewModel() {
             return@withContext roomList
         }
     }
-
-
     suspend fun reloadRooms() {
         _rooms.emit(getRooms())
     }
-
 }

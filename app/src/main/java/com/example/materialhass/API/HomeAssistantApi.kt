@@ -22,7 +22,7 @@ data class TempBody(
     val entity_id: String,
     val temperature: Double
 )
-const val token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyOTY1Zjg2NTlmZWQ0ODhkODFiMjljMTdlYTg3ZDVmMiIsImlhdCI6MTY5OTg2NTgxMiwiZXhwIjoyMDE1MjI1ODEyfQ.EE7Z5S9-iqlxclalYtOEdlI8KmPTpJv6xfCzdAtfqg8"
+const val token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI0MDZhMWNlOTJlMTM0MTYwYTJkM2QxN2NmNzdmMjBkMSIsImlhdCI6MTcwNDE5MTc2MCwiZXhwIjoyMDE5NTUxNzYwfQ.05MtZU0U25fO8R83fjlssM4INjVXJCoOHAamF3Q5tiI"
 interface HomeAssistantAPI {
     @Headers("Authorization: Bearer ${token}")
     @GET("api/states")

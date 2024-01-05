@@ -1,8 +1,10 @@
 package com.example.materialhass.customcomponents
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,17 +38,21 @@ import com.example.materialhass.models.Room
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun RoomCard(room: Room, additional: String, navController: NavController) {
+fun RoomCard(room: Room, additional: String, navController: NavController, onLongClick: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
     OutlinedCard(modifier = Modifier
         .fillMaxWidth()
-        .clickable {
-            coroutineScope.launch(Dispatchers.Main) {
-                navController.navigate("room/${room.id}")
-            }
-        }) {
+        .combinedClickable(
+            onClick =
+            {
+                coroutineScope.launch(Dispatchers.Main) {
+                    navController.navigate("room/${room.id}")
+                }
+            },
+            onLongClick = { onLongClick() },
+        )) {
         Column(modifier = Modifier.height(230.dp))
         {
             Image(
