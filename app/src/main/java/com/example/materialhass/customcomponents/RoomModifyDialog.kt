@@ -32,14 +32,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.materialhass.model.Room
+import com.example.materialhass.viewmodel.RoomsViewmodel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoomModifyDialog(
     open: Boolean,
-    onDismiss: () -> Unit
-) { //TODO: Навигация на добавление товара
+    old_room: Room?,
+    onDismiss: () -> Unit,
+    viewModel: RoomsViewmodel
+) {
     val coroutineScope = rememberCoroutineScope()
     val contentResolver = LocalContext.current.contentResolver
     var name by remember { mutableStateOf("") }
@@ -53,10 +57,9 @@ fun RoomModifyDialog(
             confirmButton = {
                 TextButton(
                     onClick = {
+                        Log.e("SHIT", old_room.toString())
                         coroutineScope.launch {
-                            /* TODO:Сохранение фото в бд
-
-                             */
+                            viewModel.saveRoom(Room(old_room!!.id, old_room!!.name, filePath!!, name, amount))
                         }
                         onDismiss()
                     }
@@ -75,8 +78,7 @@ fun RoomModifyDialog(
                     OutlinedTextField(
                         value = amount,
                         onValueChange = { amount = it },
-                        placeholder = { Text("Иконка") }, //TODO: Сдеать выбор иконки с помощью deviceIcon
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        placeholder = { Text("Иконка") } //TODO: Сдеать выбор иконки с помощью deviceIcon
                     )
                     Spacer(modifier = Modifier.height(5.dp))
 

@@ -1,5 +1,6 @@
 package com.example.materialhass.customcomponents
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -40,7 +41,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun RoomCard(room: Room, additional: String, navController: NavController, onLongClick: () -> Unit) {
+fun RoomCard(room: Room, navController: NavController, onLongClick: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
     OutlinedCard(modifier = Modifier
         .fillMaxWidth()
@@ -48,6 +49,7 @@ fun RoomCard(room: Room, additional: String, navController: NavController, onLon
             onClick =
             {
                 coroutineScope.launch(Dispatchers.Main) {
+                    Log.e("NAVIGATING TO", room.toString())
                     navController.navigate("room/${room.id}")
                 }
             },
@@ -71,30 +73,19 @@ fun RoomCard(room: Room, additional: String, navController: NavController, onLon
                 verticalAlignment = Alignment.CenterVertically
             )
             {
-                RoomCircle(icon = room.icon)
+                DeviceCircle(id = "",icon = room.icon)
                 Spacer(Modifier.width(10.dp))
                 Column {
-                    Text(room.name)
-                    Spacer(Modifier.height(4.dp))
-                    Text(additional)
+                    if(room.displayName.isNullOrBlank())
+                    {
+                        Text(room.name)
+                    }
+                    else
+                    {
+                        Text(room.displayName)
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun RoomCircle(
-    icon: ImageVector?,
-    modifier: Modifier = Modifier,
-    size: Dp = 40.dp
-) {
-    val color = MaterialTheme.colorScheme.primary
-    Box(modifier.size(size), contentAlignment = Alignment.Center) {
-        Color(color.toArgb())
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            drawCircle(SolidColor(color))
-        }
-        Icon(icon!!, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary)
     }
 }

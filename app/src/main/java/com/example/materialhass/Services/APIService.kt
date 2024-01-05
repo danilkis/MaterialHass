@@ -25,9 +25,5 @@ class APIService {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
         }
-
-
-
-
     }
 }

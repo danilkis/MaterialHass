@@ -1,5 +1,6 @@
 package com.example.materialhass.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,8 +36,8 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.materialhass.customcomponents.ClimateCard
 import com.example.materialhass.customcomponents.CoverCard
+import com.example.materialhass.customcomponents.DeviceCircle
 import com.example.materialhass.customcomponents.LightCard
-import com.example.materialhass.customcomponents.RoomCircle
 import com.example.materialhass.customcomponents.SwitchCard
 import com.example.materialhass.customcomponents.TypeDivider
 import com.example.materialhass.model.Device
@@ -63,7 +64,7 @@ fun RoomHeader(room: Room) {
             verticalAlignment = Alignment.CenterVertically
         )
         {
-            RoomCircle(icon = room.icon, size = 55.dp)
+            DeviceCircle(id = "",icon = room.icon, size = 55.dp)
             Spacer(Modifier.width(10.dp))
             Column {
                 Text(room.name, style = MaterialTheme.typography.headlineMedium)
@@ -81,6 +82,7 @@ fun RoomDevicesScreen(
     navController: NavController,
     viewModel: RoomDevicesViewmodel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
+    Log.e("RoomDevs", "NAV DONE")
     viewModel.roomName = room.name
     val devices_list by viewModel.filteredDevice.collectAsState(initial = mutableListOf())
     LaunchedEffect(Unit) { viewModel.roomDevices() }

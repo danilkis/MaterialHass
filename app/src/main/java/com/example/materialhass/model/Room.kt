@@ -6,5 +6,6 @@ data class Room(
     val id: Int,
     val name: String,
     val picture_Url: String?,
-    val icon: ImageVector
+    val displayName: String?,
+    val icon: String
 )
