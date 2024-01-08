@@ -42,6 +42,7 @@ import com.example.materialhass.customcomponents.SwitchCard
 import com.example.materialhass.customcomponents.TypeDivider
 import com.example.materialhass.model.Device
 import com.example.materialhass.model.Room
+import com.example.materialhass.viewmodel.DevicesViewmodel
 import com.example.materialhass.viewmodel.RoomDevicesViewmodel
 
 @Composable
@@ -82,9 +83,9 @@ fun RoomDevicesScreen(
     navController: NavController,
     viewModel: RoomDevicesViewmodel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    Log.e("RoomDevs", "NAV DONE")
     viewModel.roomName = room.name
     val devices_list by viewModel.filteredDevice.collectAsState(initial = mutableListOf())
+    Log.e("Devices", devices_list.toString())
     LaunchedEffect(Unit) { viewModel.roomDevices() }
     Column(modifier = Modifier.fillMaxSize())
     {
