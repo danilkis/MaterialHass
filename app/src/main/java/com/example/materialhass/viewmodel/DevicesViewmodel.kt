@@ -29,8 +29,10 @@ open class DevicesViewmodel : ViewModel() {
     }
 
     suspend fun getDevices(): MutableList<Device> {
+
         return withContext(Dispatchers.IO) {
             // Create the API instance
+
             val api = APIService.getAPI();
 
             // Make the request

@@ -21,7 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.materialhass.Services.APIService
 import com.example.materialhass.SharedPreference
+import com.example.materialhass.viewmodel.DevicesViewmodel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -39,6 +41,7 @@ fun Hello(navController: NavController) {
         }
         LaunchedEffect(null) {
             withContext(Dispatchers.IO) {
+                //DevicesViewmodel().getDevices()
                 delay(1000)
                 userReady = true
             }

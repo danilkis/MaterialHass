@@ -89,8 +89,6 @@ fun CheckEnum(iconName: String): String {
             }
         }
         val res = hexToUnicode(symbolHex)
-        Log.e("ICONS", symbolHex.toString())
-        Log.e("ICONS", res.toString())
         res
     } catch (e: IllegalArgumentException) {
         Log.e("ICONS", e.toString())

@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.HeatPump
 import androidx.compose.material.icons.filled.LightbulbCircle
 import androidx.compose.material.icons.filled.RadioButtonChecked
 import androidx.compose.material.icons.filled.RollerShades
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
@@ -44,6 +46,7 @@ import com.example.materialhass.model.Device
 import com.example.materialhass.model.Room
 import com.example.materialhass.viewmodel.DevicesViewmodel
 import com.example.materialhass.viewmodel.RoomDevicesViewmodel
+import com.example.materialhass.viewmodel.RoomsViewmodel
 
 @Composable
 fun RoomHeader(room: Room) {
@@ -68,31 +71,38 @@ fun RoomHeader(room: Room) {
             DeviceCircle(id = "",icon = room.icon, size = 55.dp)
             Spacer(Modifier.width(10.dp))
             Column {
-                Text(room.name, style = MaterialTheme.typography.headlineMedium)
-                Spacer(Modifier.height(4.dp))
-                Text(room.id.toString(), style = MaterialTheme.typography.headlineSmall)
+                Text(room.displayName?: room.name, style = MaterialTheme.typography.headlineMedium)
             }
         }
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RoomDevicesScreen(
-    room: Room,
+    roomId: Int,
     navController: NavController,
     viewModel: RoomDevicesViewmodel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    viewModel.roomName = room.name
-    val devices_list by viewModel.filteredDevice.collectAsState(initial = mutableListOf())
-    Log.e("Devices", devices_list.toString())
-    LaunchedEffect(Unit) { viewModel.roomDevices() }
-    Column(modifier = Modifier.fillMaxSize())
-    {
-        RoomHeader(room)
-        Divider()
-        DevicePage(viewModel, devices_list)
+    val roomsViewmodel = RoomsViewmodel()
+    val ctx = LocalContext.current
+    val rooms by roomsViewmodel.Rooms.collectAsState(initial = listOf()) // State moved here
+    LaunchedEffect(true) {
+        roomsViewmodel.initializeContext(ctx)
     }
+    val devices_list by viewModel.filteredDevice.collectAsState(initial = mutableListOf())
+    if (devices_list != null) {
+        val room = rooms.find { it.id == roomId }!!
+        viewModel.roomName = room.name
+        Log.e("Devices", devices_list.toString())
+        LaunchedEffect(Unit) { viewModel.roomDevices() }
+        Column(modifier = Modifier.fillMaxSize())
+        {
+            RoomHeader(room)
+            Divider()
+            DevicePage(viewModel, devices_list)
+        }
+    }
+
 }
 
 @OptIn(ExperimentalLayoutApi::class)

@@ -54,7 +54,7 @@ class RoomsViewmodel() : ViewModel() {
                         Room(
                             id = index,
                             name = roomName,
-                            picture_Url = "https://vita-property.ru/wp-content/uploads/a/c/6/ac6cbd136254d7841f86714d1acbba5c.jpeg",
+                            picture_Url = "",
                             displayName = "",
                             icon = "mdi:fridge"
                         )
@@ -84,6 +84,10 @@ class RoomsViewmodel() : ViewModel() {
             val json = gson.toJson(room)
             editor.putString(room.name, json)
             editor.apply()
+
+            // After saving, reload the rooms and emit the updated list
+            Log.e("EMIT", "Room updated")
+            _rooms.emit(getRooms(ctx))
         }
     }
 }

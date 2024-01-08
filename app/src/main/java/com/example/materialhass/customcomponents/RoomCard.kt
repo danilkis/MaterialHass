@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.example.materialhass.model.Room
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -57,8 +59,17 @@ fun RoomCard(room: Room, navController: NavController, onLongClick: () -> Unit) 
         )) {
         Column(modifier = Modifier.height(230.dp))
         {
+            val painter: Painter = if (!room.picture_Url.isNullOrEmpty()) {
+                // Load the image from the roomImageUrl if it's not empty
+                rememberImagePainter(data = room.picture_Url)
+            } else {
+                // If roomImageUrl is empty or null, use a placeholder or default image
+                // Here, you can use an async image painter as a placeholder
+                // You can replace this with any placeholder or default image you want
+                rememberImagePainter(data = "https://via.placeholder.com/150")
+            }
             Image(
-                painter = rememberAsyncImagePainter(room.picture_Url),
+                painter = painter,
                 contentDescription = null,
                 modifier = Modifier
                     .height(170.dp)

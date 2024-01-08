@@ -24,15 +24,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.materialhass.SharedPreference
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Auth(navController: NavController) {
     val ctx = LocalContext.current
     val sharedPreference = SharedPreference(ctx)
     if (!sharedPreference.GetBool("Init_setup")) {
         var serverURL by remember { mutableStateOf("") }
-        var Username by remember { mutableStateOf("") }
-        var Password by remember { mutableStateOf("") }
+        var ApiKey by remember { mutableStateOf("") }
         var Name by remember { mutableStateOf("") }
         var UserReady by remember {
             mutableStateOf(false)
@@ -40,41 +38,37 @@ fun Auth(navController: NavController) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceAround
         ) {
             Text(
-                text = "Welcome to MaterialHass!",
+                text = "Добро пожаловать в MaterialHass!",
                 fontSize = 35.sp,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             OutlinedTextField(
                 value = Name,
                 onValueChange = { Name = it },
-                placeholder = { Text(text = "Your name") }
+                placeholder = { Text(text = "Ваше имя") }
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             OutlinedTextField(
                 value = serverURL,
                 onValueChange = { serverURL = it },
-                placeholder = { Text(text = "Server URL") }
+                placeholder = { Text(text = "URL сервера") }
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             OutlinedTextField(
-                value = Username,
-                onValueChange = { Username = it },
-                placeholder = { Text(text = "Username") }
+                value = ApiKey,
+                onValueChange = { ApiKey = it },
+                placeholder = { Text(text = "Ключ API") }
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
-                value = Password,
-                onValueChange = { Password = it },
-                placeholder = { Text(text = "Password") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             Button(onClick = {
                 sharedPreference.SaveBool("Init_setup", true)
                 sharedPreference.SaveString("Name", Name)
+                sharedPreference.SaveString("ServerUrl", "https://pavlovskhome.ru/") //TODO: Поставить обратно serverUrl
+                sharedPreference.SaveString("APIkey", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIwMTc2OGVjZDY5N2Q0NWRiYjM0ODcxNGNiODJhNjQ4ZCIsImlhdCI6MTcwNDcyMDAxMiwiZXhwIjoyMDIwMDgwMDEyfQ.Miuy2GVzwW-uMrnsPwjGwMj23rLaUW8JTEVm0k2IzOw") //TODO: Поставить обратно ApiKey
                 UserReady = true
             }) {
                 Text(text = "Done")
