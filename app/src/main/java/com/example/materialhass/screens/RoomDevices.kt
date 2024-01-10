@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.materialhass.customcomponents.ClimateCard
@@ -69,7 +70,7 @@ fun RoomHeader(room: Room) {
             verticalAlignment = Alignment.CenterVertically
         )
         {
-            DeviceCircle(id = "",icon = room.icon, size = 55.dp)
+            DeviceCircle(id = "",icon = room.icon, size = 55.dp, fontSize = 25.sp)
             Spacer(Modifier.width(10.dp))
             Column {
                 var room_name = ""

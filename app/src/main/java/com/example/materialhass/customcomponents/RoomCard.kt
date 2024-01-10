@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
@@ -84,7 +85,7 @@ fun RoomCard(room: Room, navController: NavController, onLongClick: () -> Unit) 
                 verticalAlignment = Alignment.CenterVertically
             )
             {
-                DeviceCircle(id = "",icon = room.icon)
+                DeviceCircle(id = "",icon = room.icon, fontSize = 25.sp)
                 Spacer(Modifier.width(10.dp))
                 Column {
                     if(room.displayName.isNullOrBlank())

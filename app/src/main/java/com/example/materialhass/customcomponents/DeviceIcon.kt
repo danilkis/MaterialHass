@@ -36,7 +36,8 @@ fun DeviceCircle(
     id: String,
     icon: String,
     modifier: Modifier = Modifier,
-    size: Dp = 40.dp
+    size: Dp = 40.dp,
+    fontSize: TextUnit = TextUnit.Unspecified
 )
 {
     var color = MaterialTheme.colorScheme.primary
@@ -45,7 +46,7 @@ fun DeviceCircle(
         Canvas(modifier = Modifier.fillMaxSize()) {
             drawCircle(SolidColor(color))
         }
-        FontIcon(iconName = icon, color = MaterialTheme.colorScheme.onPrimary)
+        FontIcon(iconName = icon, color = MaterialTheme.colorScheme.onPrimary, fontSize = fontSize)
         //Icon(icon!!, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary)
     }
 }
