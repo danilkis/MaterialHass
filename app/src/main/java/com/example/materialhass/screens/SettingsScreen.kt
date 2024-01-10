@@ -16,9 +16,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.materialhass.SharedPreference
 import com.example.materialhass.viewmodel.SettingsViewmodel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,42 +29,45 @@ fun SettingsScreen(
     navController: NavController,
     viewModel: SettingsViewmodel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
+    val ctx = LocalContext.current
+    val sharedPreference = SharedPreference(ctx)
+
+    var serverURL by remember { mutableStateOf(sharedPreference.GetString("ServerUrl") ?: "") }
+    var ApiKey by remember { mutableStateOf(sharedPreference.GetString("APIkey") ?: "") }
+    var Name by remember { mutableStateOf(sharedPreference.GetString("Name") ?: "") }
+
     Column(modifier = Modifier
         .padding(8.dp)
         .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally) {
-        var serverUrl by remember { mutableStateOf("") }
-        var username by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
-        var name by remember { mutableStateOf("") }
+
         OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text("Как к вам обращаться?") }
+            value = Name,
+            onValueChange = { Name = it },
+            placeholder = { Text(text = "Ваше имя") }
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        OutlinedTextField(
+            value = serverURL,
+            onValueChange = { serverURL = it },
+            placeholder = { Text(text = "URL сервера") }
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        OutlinedTextField(
+            value = ApiKey,
+            onValueChange = { ApiKey = it },
+            placeholder = { Text(text = "Ключ API") }
         )
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
-            value = serverUrl,
-            onValueChange = { serverUrl = it },
-            label = { Text("URL сервера") }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text("Логин") }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Пароль") },
-            visualTransformation = PasswordVisualTransformation()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { /* Handle Done */ }) {
+        Button(onClick =
+        {
+            sharedPreference.SaveString("Name", Name)
+            sharedPreference.SaveString("ServerUrl", serverURL)
+            sharedPreference.SaveString("APIkey", ApiKey)
+        }) {
             Text("Готово")
         }
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
+

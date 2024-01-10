@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.HeatPump
 import androidx.compose.material.icons.filled.LightbulbCircle
 import androidx.compose.material.icons.filled.RadioButtonChecked
 import androidx.compose.material.icons.filled.RollerShades
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.materialhass.customcomponents.ClimateCard
+import com.example.materialhass.customcomponents.ConnectionErrorWarning
 import com.example.materialhass.customcomponents.CoverCard
 import com.example.materialhass.customcomponents.LightCard
 import com.example.materialhass.customcomponents.SwitchCard
@@ -33,6 +35,17 @@ fun DevicesScreen(
     viewModel: DevicesViewmodel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     val devicesList by viewModel.device.collectAsState(initial = mutableListOf())
+
+    if(devicesList.contains(Device(0, "ERROR", "ERROR", "ERROR", "ERROR", "ERROR", false, null, null, null)))
+    {
+        ConnectionErrorWarning()
+    }
+    else if (devicesList.isEmpty())
+    {
+        CircularProgressIndicator()
+    }
+    else
+    {
 
     val typeIconMap = mapOf(
         "light" to Icons.Default.LightbulbCircle,
@@ -69,6 +82,7 @@ fun DevicesScreen(
                 "switch" -> type.value.forEach { device ->  SwitchCard(device, modifier, viewModel) }
             }
         }
+    }
     }
 }
 

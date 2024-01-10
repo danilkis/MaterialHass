@@ -30,6 +30,8 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun Hello(navController: NavController) {
+    val ctx = LocalContext.current
+    val sharedPreference = SharedPreference(ctx)
     val nameVis by remember { mutableStateOf(true) }
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -41,7 +43,10 @@ fun Hello(navController: NavController) {
         }
         LaunchedEffect(null) {
             withContext(Dispatchers.IO) {
-                //DevicesViewmodel().getDevices()
+                if(sharedPreference.GetBool("Init_setup"))
+                {
+                    DevicesViewmodel().getDevices()
+                }
                 delay(1000)
                 userReady = true
             }
@@ -57,7 +62,7 @@ fun Hello(navController: NavController) {
                 modifier = Modifier.padding(top = 10.dp)
             ) {
                 Text(
-                    text = "Welcome back " + name.toString(),
+                    text = "С возращением " + name.toString(),
                     style = MaterialTheme.typography.bodyLarge
                 )
             }

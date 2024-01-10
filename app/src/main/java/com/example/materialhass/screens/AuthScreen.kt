@@ -67,8 +67,8 @@ fun Auth(navController: NavController) {
             Button(onClick = {
                 sharedPreference.SaveBool("Init_setup", true)
                 sharedPreference.SaveString("Name", Name)
-                sharedPreference.SaveString("ServerUrl", "https://pavlovskhome.ru/") //TODO: Поставить обратно serverUrl
-                sharedPreference.SaveString("APIkey", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIwMTc2OGVjZDY5N2Q0NWRiYjM0ODcxNGNiODJhNjQ4ZCIsImlhdCI6MTcwNDcyMDAxMiwiZXhwIjoyMDIwMDgwMDEyfQ.Miuy2GVzwW-uMrnsPwjGwMj23rLaUW8JTEVm0k2IzOw") //TODO: Поставить обратно ApiKey
+                sharedPreference.SaveString("ServerUrl", serverURL)
+                sharedPreference.SaveString("APIkey", ApiKey)
                 UserReady = true
             }) {
                 Text(text = "Done")

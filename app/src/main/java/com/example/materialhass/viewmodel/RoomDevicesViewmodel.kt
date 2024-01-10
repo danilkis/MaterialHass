@@ -26,15 +26,24 @@ class RoomDevicesViewmodel : DevicesViewmodel() {
 
     suspend fun roomDevices(): MutableList<Device> {
         return withContext(Dispatchers.IO) {
-            val api = APIService.getAPI();
-            // Make the request using the appropriate API call with the roomName parameter
-            val response = api.getRoomDevices(TemplateBody("{{ area_entities('$roomName') }}"))
-            Log.e("API ROOMS RESPONCE", response.toString())
-            val filteredDevices = getDevices().filter { device ->
-                response.any { device.name == it }
+            try {
+                val api = APIService.getAPI();
+                // Make the request using the appropriate API call with the roomName parameter
+                val response = api.getRoomDevices(TemplateBody("{{ area_entities('$roomName') }}"))
+                Log.e("API ROOMS RESPONCE", response.toString())
+                val filteredDevices = getDevices().filter { device ->
+                    response.any { device.name == it }
+                }
+                Log.e("API ROOMS DEVICXES", filteredDevices.toString())
+                return@withContext filteredDevices.toMutableList()
             }
-            Log.e("API ROOMS DEVICXES", filteredDevices.toString())
-            return@withContext filteredDevices.toMutableList()
+            catch (e: Exception)
+            {
+                Log.e("API", e.toString())
+                val deviceList: MutableList<Device> = mutableListOf()
+                deviceList.add(Device(0, "ERROR", "ERROR", "ERROR", "ERROR", "ERROR", false, null, null, null))
+                return@withContext deviceList.toMutableList()
+            }
         }
     }
 

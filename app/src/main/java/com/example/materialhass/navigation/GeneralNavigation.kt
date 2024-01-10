@@ -21,24 +21,37 @@ import com.example.supabasedemo.screens.Hello
 @Composable
 fun GeneralNavigation() {
     val navController = rememberNavController()
+    val roomsViewmodel = RoomsViewmodel()
+    val ctx = LocalContext.current
+    //val personVm = PersonsViewmodel()
+    //val persons by personVm.newPersons.collectAsState(initial = listOf())
     NavHost(navController = navController, startDestination = "auth") {
         composable("auth") {
             Auth(navController)
+            //Ввод адреса сервера
         }
         composable("helloScreen") {
             Hello(navController)
+            //Авторизация
         }
         composable("mainScreen") {
             MainScreen(navController)
+            //Переход на главный экран
         }
         composable(
             "room/{roomId}",
             arguments = listOf(navArgument("roomId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val roomId: Int = backStackEntry.arguments?.getInt("roomId") ?: 0
-
-            RoomDevicesScreen(roomId, navController)
+        ) {
+            LaunchedEffect(true) {
+                roomsViewmodel.initializeContext(ctx)
+            }
+            val roomId: Int = it.arguments?.getInt("roomId") ?: 0
+            val rooms by roomsViewmodel.Rooms.collectAsState(initial = listOf())
+            rooms.forEach { it ->
+                if (it.id == roomId) {
+                    RoomDevicesScreen(it, navController)
+                }
+            }
         }
-
     }
 }

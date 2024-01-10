@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.materialhass.customcomponents.ClimateCard
+import com.example.materialhass.customcomponents.ConnectionErrorWarning
 import com.example.materialhass.customcomponents.CoverCard
 import com.example.materialhass.customcomponents.DeviceCircle
 import com.example.materialhass.customcomponents.LightCard
@@ -71,7 +72,13 @@ fun RoomHeader(room: Room) {
             DeviceCircle(id = "",icon = room.icon, size = 55.dp)
             Spacer(Modifier.width(10.dp))
             Column {
-                Text(room.displayName?: room.name, style = MaterialTheme.typography.headlineMedium)
+                var room_name = ""
+                if(room.displayName.isNullOrBlank())
+                {
+                    room_name = room.name
+                }
+                else {room_name = room.displayName}
+                Text(room_name, style = MaterialTheme.typography.headlineMedium)
             }
         }
     }
@@ -79,19 +86,17 @@ fun RoomHeader(room: Room) {
 
 @Composable
 fun RoomDevicesScreen(
-    roomId: Int,
+    room: Room,
     navController: NavController,
     viewModel: RoomDevicesViewmodel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    val roomsViewmodel = RoomsViewmodel()
-    val ctx = LocalContext.current
-    val rooms by roomsViewmodel.Rooms.collectAsState(initial = listOf()) // State moved here
-    LaunchedEffect(true) {
-        roomsViewmodel.initializeContext(ctx)
-    }
     val devices_list by viewModel.filteredDevice.collectAsState(initial = mutableListOf())
-    if (devices_list != null) {
-        val room = rooms.find { it.id == roomId }!!
+    if(devices_list.contains(Device(0, "ERROR", "ERROR", "ERROR", "ERROR", "ERROR", false, null, null, null)))
+    {
+        ConnectionErrorWarning()
+    }
+    else
+    {
         viewModel.roomName = room.name
         Log.e("Devices", devices_list.toString())
         LaunchedEffect(Unit) { viewModel.roomDevices() }
@@ -102,7 +107,6 @@ fun RoomDevicesScreen(
             DevicePage(viewModel, devices_list)
         }
     }
-
 }
 
 @OptIn(ExperimentalLayoutApi::class)

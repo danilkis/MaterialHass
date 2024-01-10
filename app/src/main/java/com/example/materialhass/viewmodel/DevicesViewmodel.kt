@@ -32,35 +32,43 @@ open class DevicesViewmodel : ViewModel() {
 
         return withContext(Dispatchers.IO) {
             // Create the API instance
+            try {
+                val api = APIService.getAPI();
 
-            val api = APIService.getAPI();
+                // Make the request
+                val entities = api.getStates()
 
-            // Make the request
-            val entities = api.getStates()
+                // Filter the entities
+                val filteredEntities = entities.filter{  entityFilter(it) }
 
-            // Filter the entities
-            val filteredEntities = entities.filter{  entityFilter(it) }
+                // Convert the filtered entities into a list of Devices
+                val deviceList = filteredEntities.mapIndexed { index, entity ->
+                    val type = entity.entity_id.split(".")[0]
+                    val useExtendedControls = controlsFilter(entity)
 
-            // Convert the filtered entities into a list of Devices
-            val deviceList = filteredEntities.mapIndexed { index, entity ->
-                val type = entity.entity_id.split(".")[0]
-                val useExtendedControls = controlsFilter(entity)
-
-                Device(
-                    id = index,
-                    name = entity.entity_id,
-                    friendly_name = entity.attributes["friendly_name"] as String,
-                    state = entity.state,
-                    type = type,
-                    icon = entity.attributes["icon"] as String? ?: "circle",
-                    extended_controls = useExtendedControls,
-                    brightness = entity.attributes["brightness"] as Double?,
-                    position = entity.attributes["current_position"] as Double?,
-                    temperature = entity.attributes["temperature"] as Double?
-                )
+                    Device(
+                        id = index,
+                        name = entity.entity_id,
+                        friendly_name = entity.attributes["friendly_name"] as String,
+                        state = entity.state,
+                        type = type,
+                        icon = entity.attributes["icon"] as String? ?: "circle",
+                        extended_controls = useExtendedControls,
+                        brightness = entity.attributes["brightness"] as Double?,
+                        position = entity.attributes["current_position"] as Double?,
+                        temperature = entity.attributes["temperature"] as Double?
+                    )
+                }
+                return@withContext deviceList.toMutableList()
+            }
+            catch (e: Exception)
+            {
+                Log.e("API", e.toString())
+                val deviceList: MutableList<Device> = mutableListOf()
+                deviceList.add(Device(0, "ERROR", "ERROR", "ERROR", "ERROR", "ERROR", false, null, null, null))
+                return@withContext deviceList.toMutableList()
             }
 
-            return@withContext deviceList.toMutableList()
         }
     }
     private fun entityFilter(entity: Entity): Boolean {

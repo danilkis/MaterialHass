@@ -31,38 +31,47 @@ class RoomsViewmodel() : ViewModel() {
 
     suspend fun getRooms(ctx: Context): MutableList<Room> {
         return withContext(Dispatchers.IO) {
-            val api = APIService.getAPI();
-            val sharedPreferences = ctx.getSharedPreferences("RoomData", Context.MODE_PRIVATE)
-            val gson = Gson()
+            try {
+                val api = APIService.getAPI();
+                val sharedPreferences = ctx.getSharedPreferences("RoomData", Context.MODE_PRIVATE)
+                val gson = Gson()
 
-            // Make the request using the appropriate API call
-            val response = api.getRooms(TemplateBody("{{ areas() }}"))
+                // Make the request using the appropriate API call
+                val response = api.getRooms(TemplateBody("{{ areas() }}"))
 
-            // Process the response and convert it into a list of Room objects
-            val roomList = mutableListOf<Room>()
-            response.forEachIndexed { index, roomName ->
-                // Check if the room name exists in shared preferences
-                val json = sharedPreferences.getString(roomName, null)
-                if (json != null) {
-                    // If it exists, use the room from shared preferences
-                    val room = gson.fromJson(json, Room::class.java)
-                    Log.e("ROOM", room.toString())
-                    roomList.add(room)
-                } else {
-                    // If it doesn't exist, use the room from the API
-                    roomList.add(
-                        Room(
-                            id = index,
-                            name = roomName,
-                            picture_Url = "",
-                            displayName = "",
-                            icon = "mdi:fridge"
+                // Process the response and convert it into a list of Room objects
+                val roomList = mutableListOf<Room>()
+                response.forEachIndexed { index, roomName ->
+                    // Check if the room name exists in shared preferences
+                    val json = sharedPreferences.getString(roomName, null)
+                    if (json != null) {
+                        // If it exists, use the room from shared preferences
+                        val room = gson.fromJson(json, Room::class.java)
+                        Log.e("ROOM", room.toString())
+                        roomList.add(room)
+                    } else {
+                        // If it doesn't exist, use the room from the API
+                        roomList.add(
+                            Room(
+                                id = index,
+                                name = roomName,
+                                picture_Url = "",
+                                displayName = "",
+                                icon = "mdi:fridge"
+                            )
                         )
-                    )
+                    }
                 }
-            }
 
-            return@withContext roomList
+                return@withContext roomList
+            }
+            catch (e:Exception)
+            {
+                Log.e("ROOMS", e.toString())
+                val roomList = mutableListOf<Room>()
+                roomList.add(Room(0,"ERROR", "", "", ""))
+                return@withContext roomList
+            }
         }
     }
 
